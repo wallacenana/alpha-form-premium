@@ -61,7 +61,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_store',
         [
-            'label' => __('Ação: Coletar Submissão', 'alpha-form-premium'),
+            'label' => __('[Ação] Coletar Submissão', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'store',
@@ -83,7 +83,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_webhook',
         [
-            'label' => __('Ação: Webhook', 'alpha-form-premium'),
+            'label' => __('[Ação] Webhook', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'webhook',
@@ -111,7 +111,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_email',
         [
-            'label' => __('Ação: Enviar E-mail', 'alpha-form-premium'),
+            'label' => __('[Ação] Enviar E-mail', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'email',
@@ -174,7 +174,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_redirect',
         [
-            'label' => __('Ação: Redirecionar', 'alpha-form-premium'),
+            'label' => __('[Ação] Redirecionar', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'redirect',
@@ -199,7 +199,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_activecampaign_map_fields',
         [
-            'label' => __('Ação: ActiveCampaign', 'alpha-form-premium'),
+            'label' => __('[Ação] ActiveCampaign', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'integration_activecampaign',
@@ -274,15 +274,23 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
             'condition' => [
                 'actions' => 'integration_activecampaign',
             ],
-            'description' => 'Clique em "Publicar" para efetivar as alterações e usar as opções abaixo.',
         ]
     );
+    $widget->add_control(
+        'active_alert',
+        [
+            'type' => \Elementor\Controls_Manager::RAW_HTML,
+            'raw' => '<strong>⚠️ Clique em "publicar" antes de clicar no botão e usar as opções abaixo.</strong>',
+            'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+        ]
+    );
+
     $widget->add_control(
         'ajax_button',
         [
             'label' => __('Clique para receber dados', 'alpha-form-premium'),
             'type' => \Elementor\Controls_Manager::BUTTON,
-            'button_type' => 'warning',
+            'button_type' => 'success',
             'text' => __('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:send_click',
         ]
@@ -312,27 +320,13 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_mailchimp_map_fields',
         [
-            'label' => __('Ação: Mailchimp', 'alpha-form-premium'),
+            'label' => __('[Ação] Mailchimp', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'integration_mailchimp',
             ],
         ]
     );
-
-    $widget->add_control(
-        'ajax_button_mc',
-        [
-            'label' => __('Clique para receber dados', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::BUTTON,
-            'button_type' => 'warning',
-            'text' => __('Receber', 'alpha-form-premium'),
-            'event' => 'alphaform:editor:send_click',
-        ]
-    );
-
-    // ✅ Dados da API Mailchimp
-    $api_key = get_option('alpha_form_mailchimp_api_key');
 
     if (!$api_key) {
         $widget->add_control(
@@ -347,22 +341,110 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         return;
     }
 
-    $merge_fields = [
-        ['tag' => 'FNAME', 'name' => 'Primeiro Nome'],
-        ['tag' => 'LNAME', 'name' => 'Último Nome'],
-        ['tag' => 'PHONE', 'name' => 'Telefone'],
-        ['tag' => 'EMAIL', 'name' => 'Email*'],
+    $widget->add_control(
+        'mailchimp_alert2',
+        [
+            'type' => \Elementor\Controls_Manager::RAW_HTML,
+            'raw' => '<strong>⚠️ Clique em "publicar" antes de clicar no botão e usar as opções abaixo.</strong>',
+            'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+        ]
+    );
+
+    $widget->add_control(
+        'ajax_button_mc',
+        [
+            'label' => __('Clique para receber dados', 'alpha-form-premium'),
+            'type' => \Elementor\Controls_Manager::BUTTON,
+            'button_type' => 'success',
+            'text' => __('Receber', 'alpha-form-premium'),
+            'event' => 'alphaform:editor:send_click',
+        ]
+    );
+
+    $api_key = get_option('alpha_form_mailchimp_api_key');
+
+    if (!$api_key) return;
+
+    // Extrai o prefixo automaticamente da API key
+    $server_prefix = explode('-', $api_key)[1] ?? '';
+
+    if (!$server_prefix) return;
+
+    $mailchimp  = new \MailchimpMarketing\ApiClient();
+    $mailchimp->setConfig([
+        'apiKey' => $api_key,
+        'server' => $server_prefix,
+    ]);
+
+    // Busca listas (audiências)
+    try {
+        $responsex = $mailchimp->lists->getAllLists();
+        $response_array = json_decode(json_encode($responsex), true);
+        $listas = $response_array['lists'] ?? [];
+    } catch (\Exception $e) {
+        $listas = [];
+    }
+
+    $list_options = [];
+
+    foreach ($listas as $lista) {
+        if (isset($lista['id']) && isset($lista['name'])) {
+            $list_options[$lista['id']] = $lista['name'];
+        }
+    }
+
+    $widget->add_control(
+        'mailchimp_list_id',
+        [
+            'label' => __('Selecione a audiência (lista)', 'alpha-form-premium'),
+            'type' => Controls_Manager::SELECT,
+            'options' => $list_options,
+            'default' => '',
+            'condition' => [
+                'actions' => 'integration_mailchimp',
+            ],
+            'description' => 'Clique em "Publicar" para atualizar os campos da audiência selecionada.',
+        ]
+    );
+
+    // Campos padrão + merge_fields
+    $default_fields = [
+        ['id' => 'email_address', 'title' => 'Email*'],
+        ['id' => 'FNAME', 'title' => 'Primeiro Nome'],
+        ['id' => 'LNAME', 'title' => 'Último Nome'],
     ];
 
-    // 👇 Exibe dropdown de campo local para cada campo do Mailchimp
-    foreach ($merge_fields as $field) {
-        $field_tag = strtolower($field['tag']); // fname, lname...
+    $merge_fields = [];
+    try {
+        if (!empty($list_options)) {
+            // Pega o primeiro da lista como exemplo
+            $first_list_id = array_key_first($list_options);
+            $mergeResponse = $mailchimp->lists->getListMergeFields($first_list_id);
+            $mergeFieldsArray = json_decode(json_encode($mergeResponse), true);
+            foreach ($mergeFieldsArray['merge_fields'] ?? [] as $field) {
+                $merge_fields[] = [
+                    'id' => $field['tag'],
+                    'title' => $field['name'],
+                ];
+            }
+        }
+    } catch (\Exception $e) {
+        $merge_fields = [];
+    }
+
+    $all_fields = array_merge($default_fields, $merge_fields);
+
+    // Mapeia os campos do formulário para os campos do Mailchimp
+    foreach ($all_fields as $field) {
+        $field_id = $field['id'];
+        $field_label = $field['title'] ?? $field['id'];
+
         $widget->add_control(
-            'map_field_' . $field_tag . '_mc',
+            'map_field_' . $field_id,
             [
-                'label' => $field['name'],
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'options' => [], // será preenchido via JS
+                'label' => $field_label,
+                'type' => Controls_Manager::SELECT,
+                'options' => [], // Populado via JS
                 'default' => '',
                 'condition' => [
                     'actions' => 'integration_mailchimp',

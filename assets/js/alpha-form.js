@@ -257,10 +257,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    function mostrarLoader() {
+        document.getElementById('alphaform-overlay').style.display = 'flex';
+    }
+    function esconderLoader() {
+        document.getElementById('alphaform-overlay').style.display = 'none';
+    }
+
 
     document.querySelectorAll('.alpha-form').forEach(form => {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+            mostrarLoader();
 
             const inputs = form.querySelectorAll('input, textarea, select');
             const data = {};
@@ -334,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const actions = json.data.actions || [];
             const map = json.data.map || {};
             const listaId = json.data.listaId || {};
+            const listaIdMC = json.data.listaIdMC || {};
 
             console.log('[AlphaForm] Integrações ativadas:', actions);
             console.log('[AlphaForm] Mapeamentos configurados:', map);
@@ -361,12 +370,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
-                    action: 'alphaform_send_to_activecampaign',
+                    action: 'alphaform_send_integrations',
                     nonce: alphaFormVars.nonce,
                     ...dadosMapeados,
                     post_id: postId,
                     widget_id: widgetId,
-                    listaId: listaId
+                    listaId: listaId,
+                    listaIdMC: listaIdMC,
+                    actions: JSON.stringify(actions) // aqui envia as integrações selecionadas
                 })
             });
 
@@ -375,10 +386,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (resultado.success && redirectUrl)
                 window.location.href = redirectUrl;
             else if (!resultado.success) {
-                console.warn('[AlphaForm] Erro ao enviar para o ActiveCampaign:', resultado.data);
-                alert('Erro no envio.');
+                console.warn('[AlphaForm] resultado:', resultado.data);
+                const erro = typeof json.data === 'string' ? json.data : 'Erro no envio.';
+                alert('[AlphaForm] Falha no envio: ' + erro);
+                esconderLoader();
+                return
             }
 
+            esconderLoader();
 
         });
     });

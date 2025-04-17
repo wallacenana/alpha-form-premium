@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') || exit;
-require_once plugin_dir_path(__DIR__) . 'includes/license-check.php';
+require_once plugin_dir_path(__DIR__) . 'includes/line-helped.php';
 require_once plugin_dir_path(__DIR__, 2) . 'includes/integrations-helper.php';
 
 if (!afp_is_license_valid()) {

@@ -28,6 +28,7 @@ function alphaform_get_widget_actions()
                     $settings = $child['settings'] ?? [];
                     $actions = $settings['actions'] ?? [];
                     $listaId = $settings['listasExistentes'] ?? [];
+                    $listaIdMC = $settings['mailchimp_list_id'] ?? [];
 
                     $map = [];
                     foreach ($settings as $key => $value) {
@@ -40,7 +41,8 @@ function alphaform_get_widget_actions()
                     wp_send_json_success([
                         'actions' => $actions,
                         'map' => $map,
-                        'listaId' => $listaId
+                        'listaId' => $listaId,
+                        'listaIdMC' => $listaIdMC,
                     ]);
                 }
             }
@@ -51,26 +53,38 @@ function alphaform_get_widget_actions()
 }
 
 
-add_action('wp_ajax_alphaform_send_to_activecampaign', 'alphaform_send_to_activecampaign_handler');
-add_action('wp_ajax_nopriv_alphaform_send_to_activecampaign', 'alphaform_send_to_activecampaign_handler');
+add_action('wp_ajax_alphaform_send_integrations', 'alphaform_send_integrations_handler');
+add_action('wp_ajax_nopriv_alphaform_send_integrations', 'alphaform_send_integrations_handler');
 
-function alphaform_send_to_activecampaign_handler() {
+function alphaform_send_integrations_handler() {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/activecampaign.php';
+    $actions = isset($_POST['actions']) ? json_decode(stripslashes($_POST['actions']), true) : [];
 
-    // Monta array com os dados recebidos
+    if (!is_array($actions)) {
+        wp_send_json_error('Ações inválidas.');
+    }
+
     $form_data = [];
     foreach ($_POST as $key => $value) {
-        if (in_array($key, ['action', 'nonce'])) continue;
+        if (in_array($key, ['action', 'nonce', 'actions'])) continue;
         $form_data[$key] = sanitize_text_field($value);
     }
 
-    $ok = alphaform_send_to_activecampaign($form_data);
-
-    if ($ok) {
-        wp_send_json_success('Dados enviados com sucesso para ActiveCampaign.');
-    } else {
-        wp_send_json_error('Erro ao enviar dados para ActiveCampaign.');
+    // ActiveCampaign
+    if (in_array('integration_activecampaign', $actions)) {
+        require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/activecampaign.php';
+        $ok = alphaform_send_to_activecampaign($form_data);
+        if (!$ok) wp_send_json_error('Erro no envio para o ActiveCampaign');
     }
+
+    // Mailchimp
+    if (in_array('integration_mailchimp', $actions)) {
+        require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/mailchimp.php';
+        $ok = alphaform_send_to_mailchimp($form_data);
+        if (!$ok) wp_send_json_error('Erro no envio para o Mailchimp');
+    }
+
+    wp_send_json_success('Dados enviados com sucesso para as integrações.');
 }
+
