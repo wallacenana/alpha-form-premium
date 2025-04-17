@@ -1,0 +1,289 @@
+.alpha-form-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+
+
+form.alpha-form {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.alpha-form button {
+    cursor: pointer;
+}
+
+.alpha-form-wrapper h3,
+p.alpha-form-description {
+    margin: 0;
+    width: 100%;
+}
+
+.alpha-form-field {
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 0;
+    height: 0;
+    position: absolute;
+}
+
+.alpha-form-field.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    z-index: 1;
+    transform: translateY(-50%);
+    top: 50%;
+    display: contents;
+    height: auto
+}
+
+.alpha-form-controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+.alpha-form-progress-button {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.alpha-form-progress-button svg {
+    width: 100%;
+}
+
+.alpha-error {
+    color: #e63946;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.alpha-form-progress-bar{
+    overflow: hidden;
+}
+
+input.alpha-form-input {
+    width: 100% !important;
+    outline: none;
+}
+
+.alpha-form-input input[type="radio"] {
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.alpha-form-progress {
+    position: fixed;
+    z-index: 5;
+    display: flex;
+    width: 200px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.alpha-form-progress-container {
+    width: 100%;
+    text-align: left;
+}
+
+.alpha-form-submit {
+    display: block !important;
+}
+
+/* Espaçamento entre opções */
+.alpha-form-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.alpha-form-input.radio input[type="radio"] {
+    display: none;
+}
+
+.alpha-form-input.radio {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.alpha-form-input.radio label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Estilos diferentes baseados no --radio-style */
+.alpha-form-input.radio input[type="radio"]:checked+label::before {
+    content: attr(data-icon);
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+}
+
+.alpha-form-input.radio[data-style="check"] label::before {
+    content: "✓";
+}
+
+.alpha-form-input.radio[data-style="abc"] label::before {
+    content: attr(data-letter);
+    position: absolute;
+    left: -11px;
+    background: #00000030;
+    padding: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid #00000050;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    ;
+    justify-content: center;
+    align-items: center;
+}
+
+.alpha-form-input.radio input[type="radio"]:checked+label {
+    border-color: #000;
+}
+
+
+.alpha-form-wrapper label {
+    transition: all 0.2s;
+}
+
+.alpha-form-wrap {
+    background: #fff;
+    padding: 33px;
+    margin-top: 26px;
+    border-radius: 7px;
+    min-height: calc(100vh - 183px);
+}
+
+.alpha-form-wrap form {
+    background: #00000010;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.alpha-form-wrap form:not(form:last-child) {
+    margin-bottom: 20px;
+}
+
+.alpha-form-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.alpha-form-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.alpha-form-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.alpha-form-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.alpha-form-switch input:checked+.alpha-form-slider {
+    background-color: #00a0d2;
+}
+
+.alpha-form-switch input:checked+.alpha-form-slider:before {
+    transform: translateX(24px);
+}
+
+.alpha-form-license-screen {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.alpha-form-license-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.alpha-form-license-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.alpha-form-license-subtitle {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.alpha-form-license-benefits {
+    padding-left: 20px;
+    margin-bottom: 30px;
+    line-height: 1.8;
+    color: #333;
+    font-size: 15px;
+}
+
+.alpha-form-license-button {
+    background: #1d72b8;
+    color: white;
+    text-decoration: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    border-radius: 6px;
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+.alpha-form-license-button:hover {
+    background: #155d91;
+    color: white;
+}
+
+.alpha-form-license-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}

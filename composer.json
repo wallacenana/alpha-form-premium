@@ -1,0 +1,19 @@
+{
+    "name": "wallace/alpha-form-premium",
+    "description": "Sistema de formulário Premium - addon para elementor",
+    "autoload": {
+        "psr-4": {
+            "Wallace\\AlphaFormPremium\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Wallace Tavares",
+            "email": "contato@alphaform.com.br"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "mailchimp/marketing": "^3.0"
+    }
+}

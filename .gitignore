@@ -1,0 +1,11 @@
+# Ignorar arquivos desnecessários
+/vendor/
+node_modules/
+*.log
+*.zip
+.DS_Store
+*.bak
+*.tmp
+.idea/
+.vscode/
+.env

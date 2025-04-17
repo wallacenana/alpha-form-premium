@@ -1,0 +1,286 @@
+[
+    {
+        "id": "8fe17e7",
+        "elType": "container",
+        "settings": {
+            "boxed_width": {
+                "unit": "px",
+                "size": 708,
+                "sizes": []
+            },
+            "min_height": {
+                "unit": "vh",
+                "size": 100,
+                "sizes": []
+            },
+            "min_height_laptop": {
+                "unit": "vh",
+                "size": "",
+                "sizes": []
+            },
+            "min_height_tablet": {
+                "unit": "vh",
+                "size": "",
+                "sizes": []
+            },
+            "min_height_mobile": {
+                "unit": "vh",
+                "size": "",
+                "sizes": []
+            },
+            "flex_justify_content": "center",
+            "_flex_align_self": "center",
+            "background_background": "classic",
+            "background_color": "#0D1C2A",
+            "background_color_stop": {
+                "unit": "%",
+                "size": 32,
+                "sizes": []
+            },
+            "background_color_b": "#1E4664",
+            "background_gradient_type": "radial",
+            "flex_align_items": "center",
+            "background_image": {
+                "url": "http:\/\/localhost\/alpha\/wp-content\/uploads\/2025\/04\/VqS5MWhbiRl2wThaUGQP3SSPK5ut1PpG6eAZzF3b.png",
+                "id": 603,
+                "size": "",
+                "alt": "",
+                "source": "library"
+            },
+            "background_position": "center center",
+            "background_size": "cover"
+        },
+        "elements": [
+            {
+                "id": "0ad0634",
+                "elType": "widget",
+                "settings": {
+                    "image": {
+                        "url": "http:\/\/localhost\/alpha\/wp-content\/uploads\/2025\/04\/o5IGNqtzv0hRAF5LJsVyhZh5VPc4dDvkXh7VAv9G.png",
+                        "id": 604,
+                        "size": "",
+                        "alt": "",
+                        "source": "library"
+                    },
+                    "_element_width": "initial",
+                    "_element_custom_width": {
+                        "unit": "px",
+                        "size": 144,
+                        "sizes": []
+                    },
+                    "_position": "fixed",
+                    "_offset_x": {
+                        "unit": "%",
+                        "size": "",
+                        "sizes": []
+                    },
+                    "_offset_x_laptop": {
+                        "unit": "%",
+                        "size": "",
+                        "sizes": []
+                    },
+                    "_offset_x_tablet": {
+                        "unit": "%",
+                        "size": "",
+                        "sizes": []
+                    },
+                    "_offset_x_mobile": {
+                        "unit": "%",
+                        "size": "",
+                        "sizes": []
+                    },
+                    "_offset_y": {
+                        "unit": "px",
+                        "size": 22,
+                        "sizes": []
+                    }
+                },
+                "elements": [],
+                "widgetType": "image"
+            },
+            {
+                "id": "d46ba13",
+                "elType": "widget",
+                "settings": {
+                    "form_name": "Formul\u00e1rio Alpha ",
+                    "form_fields": [
+                        {
+                            "custom_id": "field_email",
+                            "field_type": "email",
+                            "field_label": "Qual o seu email?",
+                            "field_placeholder": "Digite aqui",
+                            "required": "yes",
+                            "_id": "80de3f4",
+                            "acceptance_text": "Li e aceito a pol\u00edtica de privacidade.",
+                            "next_button_text": "Ok"
+                        },
+                        {
+                            "_id": "978075d",
+                            "acceptance_text": "Li e aceito a pol\u00edtica de privacidade.",
+                            "field_label": "nome",
+                            "next_button_text": "Ok"
+                        }
+                    ],
+                    "button_text": "Enviar",
+                    "btn_value": "Formul\u00e1rio conclu\u00eddo",
+                    "btn_descricao": "Clique no bot\u00e3o abaixo para ser redirecionado",
+                    "email_subject": "Nova submiss\u00e3o do formul\u00e1rio",
+                    "email_from_name": "AlphaForm",
+                    "email_message": "[all_fields]",
+                    "actions": [
+                        "store",
+                        "integration_activecampaign",
+                        "integration_mailchimp"
+                    ],
+                    "listasExistentes": "3",
+                    "select_field": "5aeeaa5",
+                    "map_field_email": "80de3f4",
+                    "map_field_first_name": "978075d",
+                    "map_field_last_name": "a8eaf4d",
+                    "map_field_phone": "a8eaf4d",
+                    "map_field_organization": "a8eaf4d",
+                    "map_field_1": "3857fea",
+                    "titulo_typography_typography": "custom",
+                    "titulo_typography_font_family": "Playfair Display",
+                    "titulo_typography_font_weight": "600",
+                    "titulo_color": "#FFFFFF",
+                    "titulo_spacing_bottom": {
+                        "unit": "px",
+                        "size": 10,
+                        "sizes": []
+                    },
+                    "description_typography_typography": "custom",
+                    "description_typography_font_family": "Archivo",
+                    "description_typography_font_weight": "300",
+                    "description_color": "#FFFFFF",
+                    "input_text_color": "#FFFFFF",
+                    "input_background": "#02010100",
+                    "input_border_color_x": "#FFFFFF",
+                    "input_border_border": "solid",
+                    "input_border_width": {
+                        "unit": "px",
+                        "top": "0",
+                        "right": "0",
+                        "bottom": "2",
+                        "left": "0",
+                        "isLinked": false
+                    },
+                    "input_border_color": "#FFFFFF8C",
+                    "input_padding": {
+                        "unit": "px",
+                        "top": "15",
+                        "right": "25",
+                        "bottom": "15",
+                        "left": "9",
+                        "isLinked": false
+                    },
+                    "button_typography_typography": "custom",
+                    "button_typography_font_family": "Archivo",
+                    "button_typography_font_size": {
+                        "unit": "px",
+                        "size": 15,
+                        "sizes": []
+                    },
+                    "button_typography_font_weight": "400",
+                    "button_typography_letter_spacing": {
+                        "unit": "px",
+                        "size": 0.2,
+                        "sizes": []
+                    },
+                    "button_text_color": "#FFFFFF",
+                    "button_background": "#83192C",
+                    "button_padding_x": {
+                        "unit": "px",
+                        "top": "10",
+                        "right": "25",
+                        "bottom": "10",
+                        "left": "25",
+                        "isLinked": false
+                    },
+                    "_element_width": "inherit",
+                    "input_typography_typography": "custom",
+                    "input_typography_font_family": "Archivo",
+                    "input_typography_font_weight": "400",
+                    "box_gap": {
+                        "unit": "px",
+                        "size": 20,
+                        "sizes": []
+                    },
+                    "button_progress_text_color": "#FFFFFF",
+                    "button_progress_background": "#61CE7000",
+                    "icon_prev": {
+                        "value": "fas fa-chevron-up",
+                        "library": "fa-solid"
+                    },
+                    "icon_next": {
+                        "value": "fas fa-chevron-down",
+                        "library": "fa-solid"
+                    },
+                    "description_typography_font_size": {
+                        "unit": "px",
+                        "size": 15,
+                        "sizes": []
+                    },
+                    "input_radius": {
+                        "unit": "px",
+                        "top": "0",
+                        "right": "0",
+                        "bottom": "0",
+                        "left": "0",
+                        "isLinked": true
+                    },
+                    "button_background_hover": "#690E1E",
+                    "progress_button_icon_size": {
+                        "unit": "px",
+                        "size": 11,
+                        "sizes": []
+                    },
+                    "button_progress_text_color_hover": "#AC3147",
+                    "__globals__": [],
+                    "button_progress_background_hover": "#AC31472E",
+                    "progress_button_radius": {
+                        "unit": "px",
+                        "top": "50",
+                        "right": "50",
+                        "bottom": "50",
+                        "left": "50",
+                        "isLinked": true
+                    },
+                    "prograss_button_padding": {
+                        "unit": "px",
+                        "top": "11",
+                        "right": "15",
+                        "bottom": "11",
+                        "left": "15",
+                        "isLinked": false
+                    },
+                    "controles": "",
+                    "progress_width": {
+                        "unit": "%",
+                        "size": 100,
+                        "sizes": []
+                    },
+                    "progress_pos_x": {
+                        "unit": "%",
+                        "size": 0,
+                        "sizes": []
+                    },
+                    "progress_pos_y": {
+                        "unit": "%",
+                        "size": 99.5,
+                        "sizes": []
+                    },
+                    "progress_background_color_fill": "#83192C",
+                    "progress_height": {
+                        "unit": "px",
+                        "size": 5,
+                        "sizes": []
+                    }
+                },
+                "elements": [],
+                "widgetType": "alpha_form"
+            }
+        ],
+        "isInner": false
+    }
+]
