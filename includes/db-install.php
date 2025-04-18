@@ -18,6 +18,8 @@ function alpha_form_create_response_table() {
             form_id VARCHAR(50) NOT NULL,
             session_id VARCHAR(100) NOT NULL,
             data LONGTEXT,
+            widget_id VARCHAR(50) NOT NULL,
+            postId BIGINT UNSIGNED NOT NULL,
             submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             INDEX (form_id),

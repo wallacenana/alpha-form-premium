@@ -9,14 +9,11 @@ function render_alpha_form_fields($settings, $widget_id)
 {
     echo '<div class="alpha-form-wrapper">';
 
-    $form_name = sanitize_title($settings['form_name'] ?? 'formulario-alpha');
-    $form_id = 'afp_' . $form_name;
+    $form_name = $settings['form_name'] ?? 'formulario-alpha';
 
     $datashortcode = $settings['redirect_url']['url'] ?? '';
 
-    echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_id) . '" data-redirect="' . esc_attr($datashortcode) . '">';
-
-
+    echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_name) . '" data-redirect="' . esc_attr($datashortcode) . '">';
 
     if (!empty($settings['form_fields'])) {
         foreach ($settings['form_fields'] as $i => $field) {
@@ -199,6 +196,6 @@ function render_alpha_form_fields($settings, $widget_id)
             </div>';
 
     if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-        echo '<style>.alpha-form-field { opacity: 1 !important; visibility: visible !important; position: relative !important; transform: none !important; height: auto!important; margin-bottom: 50px !important }</style>';
+        echo '<style>.alpha-form-field { opacity: 1 !important; visibility: visible !important; margin-bottom: 20px!important; position: relative !important; transform: none !important; height: auto!important; margin-bottom: 50px !important }</style>';
     }
 }

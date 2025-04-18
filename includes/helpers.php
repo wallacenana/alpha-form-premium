@@ -33,3 +33,30 @@ function alphaform_get_repeater_fields_from_db($widget_id, $post_id)
 
     return $results;
 }
+
+function alphaform_map_labels_from_widget($post_id, $widget_id) {
+    $raw = get_post_meta($post_id, '_elementor_data', true);
+    if (!$raw) return [];
+
+    $data = json_decode($raw, true);
+    if (!is_array($data)) return [];
+
+    foreach ($data as $el) {
+        if (!empty($el['elements']) && is_array($el['elements'])) {
+            foreach ($el['elements'] as $child) {
+                if (($child['id'] ?? '') === $widget_id) {
+                    $fields = $child['settings']['form_fields'] ?? [];
+                    $labels = [];
+                    foreach ($fields as $field) {
+                        if (!empty($field['_id']) && !empty($field['field_label'])) {
+                            $labels['field_' . $field['_id']] = $field['field_label'];
+                        }
+                    }
+                    return $labels;
+                }
+            }
+        }
+    }
+
+    return [];
+}

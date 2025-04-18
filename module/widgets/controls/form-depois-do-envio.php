@@ -7,7 +7,7 @@ use Elementor\Widget_Base;
 
 require_once ALPHA_FORM_PLUGIN_PATH . 'includes/line-helped.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'includes/integrations-helper.php';
-require_once ALPHA_FORM_PLUGIN_PATH . 'includes/helpers/field-helper.php';
+require_once ALPHA_FORM_PLUGIN_PATH . 'includes/field-helper.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'includes/helpers.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'vendor/autoload.php';
 

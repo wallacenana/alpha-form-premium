@@ -1,9 +1,22 @@
-.alpha-form-wrapper {
-    position: relative;
-    width: 100%;
+:root {
+    --cor-branco: #fff;
+    --cor-accent: #347CF4;
+    --cor-black: #070707;
+    --cor-gray: #737373;
+    --cor-success: #16a34a;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
+.alpha-form-wrap {
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    width: calc(100% - 50px);
+}
+
+.alpha-form-wrap {
+    font-family: 'Inter', sans-serif;
+}
 
 form.alpha-form {
     width: 100%;
@@ -65,7 +78,7 @@ p.alpha-form-description {
     margin-top: 6px;
 }
 
-.alpha-form-progress-bar{
+.alpha-form-progress-bar {
     overflow: hidden;
 }
 
@@ -127,8 +140,8 @@ input.alpha-form-input {
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
-    background: #000;
-    color: #fff;
+    background: var(--cor-black);
+    color: var(--cor-branco);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -144,11 +157,11 @@ input.alpha-form-input {
     content: attr(data-letter);
     position: absolute;
     left: -11px;
-    background: #00000030;
+    background: var(--cor-black);
     padding: 6px;
     top: 50%;
     transform: translateY(-50%);
-    border: 1px solid #00000050;
+    border: 1px solid var(--cor-black);
     width: 22px;
     height: 22px;
     display: flex;
@@ -161,7 +174,7 @@ input.alpha-form-input {
 }
 
 .alpha-form-input.radio input[type="radio"]:checked+label {
-    border-color: #000;
+    border-color: var(--cor-black);
 }
 
 
@@ -169,22 +182,18 @@ input.alpha-form-input {
     transition: all 0.2s;
 }
 
-.alpha-form-wrap {
-    background: #fff;
-    padding: 33px;
-    margin-top: 26px;
-    border-radius: 7px;
-    min-height: calc(100vh - 183px);
-}
-
-.alpha-form-wrap form {
-    background: #00000010;
+.alpha-form-wrap .alpha-form-content {
+    background: var(--cor-branco);
+    display: flex;
+    align-items: center;
     padding: 20px;
     border-radius: 10px;
+    gap: 15px;
+    max-width: 100%;
 }
 
-.alpha-form-wrap form:not(form:last-child) {
-    margin-bottom: 20px;
+.alpha-form-wrap {
+    padding: 15px;
 }
 
 .alpha-form-switch {
@@ -219,13 +228,13 @@ input.alpha-form-input {
     width: 18px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--cor-branco);
     transition: .4s;
     border-radius: 50%;
 }
 
 .alpha-form-switch input:checked+.alpha-form-slider {
-    background-color: #00a0d2;
+    background-color: var(--cor-accent);
 }
 
 .alpha-form-switch input:checked+.alpha-form-slider:before {
@@ -239,11 +248,10 @@ input.alpha-form-input {
 }
 
 .alpha-form-license-card {
-    background: #fff;
+    background: var(--cor-branco);
     border: 1px solid #ddd;
     border-radius: 12px;
     padding: 40px 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
 .alpha-form-license-title {
@@ -253,7 +261,7 @@ input.alpha-form-input {
 
 .alpha-form-license-subtitle {
     font-size: 16px;
-    color: #444;
+    color: var(--cor-black);
     margin-bottom: 30px;
     line-height: 1.6;
 }
@@ -262,13 +270,13 @@ input.alpha-form-input {
     padding-left: 20px;
     margin-bottom: 30px;
     line-height: 1.8;
-    color: #333;
+    color: var(--cor-black);
     font-size: 15px;
 }
 
 .alpha-form-license-button {
-    background: #1d72b8;
-    color: white;
+    background: var(--cor-accent);
+    color: var(--cor-branco);
     text-decoration: none;
     padding: 12px 28px;
     font-size: 16px;
@@ -279,7 +287,7 @@ input.alpha-form-input {
 
 .alpha-form-license-button:hover {
     background: #155d91;
-    color: white;
+    color: var(--cor-branco);
 }
 
 .alpha-form-license-note {
@@ -299,10 +307,246 @@ input.alpha-form-input {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .alphaform-loader-box img {
+}
+
+.alphaform-loader-box img {
     width: 64px;
     height: 64px;
-  }
-  
+}
+
+
+/* dashboard */
+
+/* Área que envolve o card ou o conteúdo em loading */
+.alpha-skeleton {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Tamanho padrão para cards ou blocos */
+.alpha-skeleton.card {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 20px;
+    width: calc(100% / 4 - 15px);
+}
+
+/* Versão para texto */
+.alpha-skeleton.text {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Versão para botão */
+.alpha-skeleton.button {
+    height: 36px;
+    width: 140px;
+    border-radius: 8px;
+}
+
+/* Efeito shimmer */
+.alpha-skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150px;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(to right, transparent 0%, #f5f5f5 50%, transparent 100%);
+    animation: shimmer 1.5s infinite;
+}
+
+/* Animação */
+@keyframes shimmer {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.alpha-topbar p {
+    font-size: 16px;
+    margin: 0;
+}
+
+p.alpha-description:last-child {
+    margin-bottom: 10px!important;
+}
+
+.alpha-topbar {
+    position: absolute;
+    top: 0;
+    left: -20px;
+    display: block;
+    width: 101.6%;
+    background: var(--cor-accent);
+    padding: 15px 37px;
+    box-sizing: border-box;
+    color: var(--cor-branco);
+    text-align: center;
+}
+
+.alpha-btn-cta {
+    background: var(--cor-black);
+    padding: 8px 25px;
+    text-decoration: none;
+    color: var(--cor-branco);
+    transition: all 0.2s;
+    display: inline-block;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.alpha-btn-cta:hover {
+    transform: scale(1.05);
+    color: var(--cor-branco);
+}
+
+.alpha-form-dashboard {
+    margin-top: 30px;
+}
+
+.alpha-form-title {
+    font-size: 26px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+.alpha-form-subtitle {
+    font-size: 15px;
+    color: var(--cor-gray);
+}
+
+.alpha-form-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.alpha-form-card {
+    background: var(--cor-branco);
+    padding: 30px 20px;
+    width: calc(100% / 4 - 15px);
+    text-decoration: none;
+    color: var(--cor-black);
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    border: none;
+}
+
+.alpha-form-card h3 {
+    font-size: 26px;
+    margin: 15px 0;
+}
+
+.alpha-form-card:hover {
+    border-color: #2271b1;
+    box-shadow: 0 2px 10px rgba(34, 113, 177, 0.15);
+}
+
+.alpha-form-card .icon {
+    background: #347cf440;
+    color: var(--cor-accent);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 15px;
+    top: 13px;
+    font-size: 26px;
+}
+
+.alpha-form-card .label {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--cor-gray);
+}
+
+.alpha-cima {
+    display: flex;
+    justify-content: space-between;
+}
+
+.alpha-base {
+    font-size: 16px;
+}
+
+
+
+
+.alpha-form-dashboard h2 {
+    margin: 0;
+}
+
+.alpha-form-dashboard h2,
+.alpha-form-dashboard h3:not(.alpha-result) {
+    color: var(--cor-black);
+}
+
+
+.alpha-card-promo {
+    color: var(--cor-branco);
+    display: flex;
+    padding: 0;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.alpha-card-promo .alpha-promo-content {
+    background: var(--cor-accent);
+    padding: 1rem;
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+}
+
+.alpha-card-promo .alpha-promo-title {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.alpha-card-promo .alpha-promo-text {
+    font-size: 0.9rem;
+    margin-bottom: 0.7rem;
+    color: var(--cor-branco);
+}
+
+.alpha-card-promo:hover .alpha-promo-text {
+    color: var(--cor-branco);
+}
+
+.alpha-card-promo .alpha-promo-cta {
+    background: var(--cor-black);
+    color: var(--cor-branco);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.alpha-card-promo .alpha-promo-cta:hover {
+    transform: scale(1.05);
+}
+
+
+.alpha-skeleton .p,
+.alpha-skeleton h3:not(.alpha-promo-title),
+.alpha-skeleton span,
+.alpha-skeleton .icon {
+    background-color: var(--cor-gray);
+    color: var(--cor-gray);
+    border-radius: 4px;
+}

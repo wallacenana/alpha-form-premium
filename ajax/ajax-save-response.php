@@ -2,14 +2,18 @@
 add_action('wp_ajax_alpha_form_save_response', 'alpha_form_save_response');
 add_action('wp_ajax_nopriv_alpha_form_save_response', 'alpha_form_save_response');
 
-function alpha_form_save_response() {
+function alpha_form_save_response()
+{
+    check_ajax_referer('alpha_form_nonce', 'nonce');
     global $wpdb;
 
     $form_id    = sanitize_text_field($_POST['form_id'] ?? '');
     $session_id = sanitize_text_field($_POST['session_id'] ?? '');
+    $widget_id = sanitize_text_field($_POST['widgetId'] ?? '');
+    $postId = sanitize_text_field($_POST['postId'] ?? '');
     $response   = isset($_POST['response']) ? json_decode(stripslashes($_POST['response']), true) : [];
 
-    if (!$form_id || !$session_id || empty($response)) {
+    if (!$form_id || !$session_id || empty($response) || empty($widget_id)) {
         wp_send_json_error(['message' => 'Campos obrigatórios ausentes.']);
     }
 
@@ -18,13 +22,17 @@ function alpha_form_save_response() {
     // Verifica se já existe registro para essa sessão + formulário
     $existing = $wpdb->get_var($wpdb->prepare(
         "SELECT id FROM $table WHERE form_id = %s AND session_id = %s",
-        $form_id, $session_id
+        $form_id,
+        $session_id,
+        $widget_id,
+        $postId
     ));
 
     if ($existing) {
         // Atualiza o JSON existente
         $existing_json = $wpdb->get_var($wpdb->prepare(
-            "SELECT data FROM $table WHERE id = %d", $existing
+            "SELECT data FROM $table WHERE id = %d",
+            $existing
         ));
 
         $existing_data = json_decode($existing_json, true) ?? [];
@@ -53,6 +61,8 @@ function alpha_form_save_response() {
         $inserted = $wpdb->insert($table, [
             'form_id'      => $form_id,
             'session_id'   => $session_id,
+            'widget_id'    => $widget_id,
+            'postId'       => $postId,
             'data'         => wp_json_encode($response),
             'submitted_at' => current_time('mysql'),
         ]);

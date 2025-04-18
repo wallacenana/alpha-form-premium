@@ -225,11 +225,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const form = fieldElement.closest('form');
         const formId = form?.dataset.formId || 'alpha_form_undefined';
+        const widgetId = form.dataset.widgetId;
+        const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
 
         const data = {
             action: 'alpha_form_save_response',
             form_id: formId,
             session_id: sessionId,
+            nonce: alphaFormVars.nonce,
+            widgetId: widgetId,
+            postId: postId,
             response: JSON.stringify({
                 [input.name]: value
             })
@@ -270,6 +275,10 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             mostrarLoader();
 
+            const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
+            const widgetId = form.dataset.widgetId;
+            const raw = {};
+
             const inputs = form.querySelectorAll('input, textarea, select');
             const data = {};
 
@@ -298,11 +307,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             // inicio do envio com js
-
-
-            const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
-            const widgetId = form.dataset.widgetId;
-            const raw = {};
 
             inputs.forEach(input => {
                 if (!input.name) return;
@@ -403,5 +407,3 @@ document.addEventListener('DOMContentLoaded', function () {
     showField(currentIndex);
 
 });
-
-
