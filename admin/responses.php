@@ -85,8 +85,8 @@ $results = $wpdb->get_results($wpdb->prepare($sql, ...$params));
             'format' => '',
             'current' => $current_page,
             'total' => $total_pages,
-            'prev_text' => 'Anterior',
-            'next_text' => 'Próxima'
+            'prev_text' => '<i class="dashicons dashicons-arrow-left-alt2"></i>',
+            'next_text' => '<i class="dashicons dashicons-arrow-right-alt2"></i>'
         ]);
         echo '</div></div>';
     endif;

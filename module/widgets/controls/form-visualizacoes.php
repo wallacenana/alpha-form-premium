@@ -1,4 +1,5 @@
 <?php
+
 namespace AlphaFormPremium\Module\Controls;
 
 use Elementor\Controls_Manager;
@@ -6,8 +7,9 @@ use Elementor\Widget_Base;
 
 if (!defined('ABSPATH')) exit;
 
-function register_form_visualizacoes_controls(Widget_Base $widget) {
-    
+function register_form_visualizacoes_controls(Widget_Base $widget)
+{
+
     $widget->start_controls_section(
         'section_form_view',
         [
@@ -15,7 +17,7 @@ function register_form_visualizacoes_controls(Widget_Base $widget) {
             'tab' => Controls_Manager::TAB_CONTENT,
         ]
     );
-    
+
     $widget->add_control(
         'controles',
         [
@@ -27,7 +29,7 @@ function register_form_visualizacoes_controls(Widget_Base $widget) {
             'default' => 'yes',
         ]
     );
-    
+
     $widget->add_control(
         'porcentagem',
         [
@@ -39,8 +41,15 @@ function register_form_visualizacoes_controls(Widget_Base $widget) {
             'default' => 'yes',
         ]
     );
-        
-    $widget->end_controls_section();
 
-    
+    $widget->add_control('enable_geolocation', [
+        'label' => __('Ativar Geolocalização', 'alpha-form-premium'),
+        'type' => Controls_Manager::SWITCHER,
+        'label_on' => __('Sim', 'alpha-form-premium'),
+        'label_off' => __('Não', 'alpha-form-premium'),
+        'return_value' => 'yes',
+        'default' => 'yes',
+    ]);
+
+    $widget->end_controls_section();
 }

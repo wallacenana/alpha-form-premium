@@ -52,6 +52,30 @@ $labels = alphaform_map_labels_from_widget($response->postId, $response->widget_
                 <th>Data de Envio</th>
                 <td><?php echo esc_html($response->submitted_at); ?></td>
             </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    <?php
+                    if ($response->concluido == 1) {
+                        echo '<span class="text-success">Concluído</span>';
+                    } elseif ($response->start_form == 1 && $response->concluido == 0) {
+                        echo '<span class="text-info">Não concluído</span>';
+                    } elseif ($response->page_view == 1 && $response->start_form == 0) {
+                        echo '<span class="text-warning">Não Iniciado</span>';
+                    } else {
+                        echo '<span class="text-warning">Não Iniciado</span>';
+                    }
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Cidade</th>
+                <td><?php echo esc_html($response->city ?? 'Desconhecida'); ?></td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td><?php echo esc_html($response->state ?? 'Desconhecido'); ?></td>
+            </tr>
         </tbody>
     </table>
 

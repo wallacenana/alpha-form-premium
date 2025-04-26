@@ -60,3 +60,19 @@ function alphaform_map_labels_from_widget($post_id, $widget_id) {
 
     return [];
 }
+
+function alphaform_formatar_dados_para_webhook($post_id, $widget_id, $form_data) {
+    $labels = alphaform_map_labels_from_widget($post_id, $widget_id); // já existe
+    $dados_legiveis = [];
+
+    foreach ($form_data as $chave => $valor) {
+        if (strpos($chave, 'field_') === 0) {
+            $custom_id = str_replace('field_', '', $chave);
+            $label = $labels[$chave] ?? $custom_id;
+
+            $dados_legiveis[$label] = $valor;
+        }
+    }
+
+    return $dados_legiveis;
+}

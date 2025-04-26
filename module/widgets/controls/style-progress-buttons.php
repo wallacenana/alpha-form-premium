@@ -4,8 +4,6 @@ namespace AlphaFormPremium\Module\Controls;
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Typography;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
 use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
 
 if (!defined('ABSPATH')) exit;
@@ -110,7 +108,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
     $widget->end_controls_tabs(); // Fim das tabs Normal/Hover
     
     $widget->add_group_control(
-        \Elementor\Group_Control_Border::get_type(),
+        Group_Control_Border::get_type(),
         [
             'name' => 'progress_button_border',
             'selector' => '{{WRAPPER}} .alpha-form-progress-button',

@@ -6,7 +6,7 @@ use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use Elementor\Group_Control_Typography;
 use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
+use Elementor\Group_Control_Border;
 
 if (!defined('ABSPATH')) exit;
 
@@ -54,7 +54,7 @@ function register_style_input_controls(Widget_Base $widget)
     );
 
     $widget->add_group_control(
-        \Elementor\Group_Control_Border::get_type(),
+        Group_Control_Border::get_type(),
         [
             'name' => 'input_border',
             'selector' => '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)',

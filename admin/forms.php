@@ -6,7 +6,7 @@ global $wpdb;
 $table = $wpdb->prefix . 'alpha_form_responses';
 
 // Consulta agrupando por widget_id
-$results = $wpdb->get_results("SELECT widget_id, form_id, COUNT(*) as total, MAX(postId) as postId FROM {$table} GROUP BY widget_id", ARRAY_A);
+$results = $wpdb->get_results("SELECT widget_id, MAX(form_id) as form_id, COUNT(*) as total, MAX(postId) as postId FROM {$table} GROUP BY widget_id", ARRAY_A);
 
 ?>
 <div class="wrap alpha-form-wrap">

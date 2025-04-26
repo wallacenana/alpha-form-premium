@@ -15,7 +15,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'section_submit_button',
         [
             'label' => __('Botões', 'alpha-form-premium'),
-            'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            'tab' => Controls_Manager::TAB_CONTENT,
         ]
     );
 
@@ -24,7 +24,7 @@ function register_form_botao_controls(Widget_Base $widget)
         [
             'label' => __('Texto do Botão', 'alpha-form-premium'),
             'label_block' => true,
-            'type' => \Elementor\Controls_Manager::TEXT,
+            'type' => Controls_Manager::TEXT,
             'default' => 'Enviar',
         ]
     );
@@ -33,7 +33,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'btn_value',
         [
             'label' => __('Titulo', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::TEXT,
+            'type' => Controls_Manager::TEXT,
             'label_block' => true,
             'default' => 'Formulário concluído',
         ]
@@ -42,7 +42,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'btn_descricao',
         [
             'label' => __('Descrição', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::TEXTAREA,
+            'type' => Controls_Manager::TEXTAREA,
             'default' => 'Clique no botão abaixo para ser redirecionado',
         ]
     );
@@ -51,7 +51,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'button_width_percent',
         [
             'label' => __('Largura do Botão (%)', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::SELECT,
+            'type' => Controls_Manager::SELECT,
             'options' => [
                 '15'  => '15%',
                 '20'  => '20%',
@@ -79,7 +79,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'button_icon',
         [
             'label' => __('Ícone do Botão', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::ICONS,
+            'type' => Controls_Manager::ICONS,
             'default' => [
                 'value' => '',
                 'library' => '',
@@ -91,7 +91,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'button_id',
         [
             'label' => __('ID do Botão', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::TEXT,
+            'type' => Controls_Manager::TEXT,
             'placeholder' => 'ex: enviar_btn_1',
             'description' => 'Certifique-se de que o ID seja único e não usado em outra parte da página. Este campo permite letras (A-z), números (0-9) e underline, sem espaços.',
         ]
@@ -103,7 +103,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'icon_prev',
         [
             'label' => __('Ícone de Voltar', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::ICONS,
+            'type' => Controls_Manager::ICONS,
             'default' => [
                 'value' => 'fas fa-chevron-left',
                 'library' => 'fa-solid',
@@ -116,7 +116,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'icon_next',
         [
             'label' => __('Ícone de Avançar', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::ICONS,
+            'type' => Controls_Manager::ICONS,
             'default' => [
                 'value' => 'fas fa-chevron-right',
                 'library' => 'fa-solid',

@@ -27,6 +27,7 @@ function alphaform_send_to_activecampaign($form_data)
         return false;
     }
 
+    error_log($email);
     $client = new Client();
 
     try {

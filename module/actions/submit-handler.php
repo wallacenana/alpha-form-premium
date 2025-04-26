@@ -29,6 +29,7 @@ function alphaform_get_widget_actions()
                     $actions = $settings['actions'] ?? [];
                     $listaId = $settings['listasExistentes'] ?? [];
                     $listaIdMC = $settings['mailchimp_list_id'] ?? [];
+                    $webhook_url = $settings['webhook_url'] ?? [];
 
                     $map = [];
                     foreach ($settings as $key => $value) {
@@ -43,6 +44,7 @@ function alphaform_get_widget_actions()
                         'map' => $map,
                         'listaId' => $listaId,
                         'listaIdMC' => $listaIdMC,
+                        'webhook_url' => $webhook_url,
                     ]);
                 }
             }
@@ -56,8 +58,11 @@ function alphaform_get_widget_actions()
 add_action('wp_ajax_alphaform_send_integrations', 'alphaform_send_integrations_handler');
 add_action('wp_ajax_nopriv_alphaform_send_integrations', 'alphaform_send_integrations_handler');
 
-function alphaform_send_integrations_handler() {
+function alphaform_send_integrations_handler()
+{
     check_ajax_referer('alpha_form_nonce', 'nonce');
+
+    global $wpdb;
 
     $actions = isset($_POST['actions']) ? json_decode(stripslashes($_POST['actions']), true) : [];
 
@@ -69,6 +74,14 @@ function alphaform_send_integrations_handler() {
     foreach ($_POST as $key => $value) {
         if (in_array($key, ['action', 'nonce', 'actions'])) continue;
         $form_data[$key] = sanitize_text_field($value);
+    }
+
+    if (!empty($_POST['is_final_submission'])) {
+        $wpdb->update(
+            "{$wpdb->prefix}alpha_form_responses",
+            ['concluido' => 1],
+            ['session_id' => sanitize_text_field($form_data['session_id'])]
+        );
     }
 
     // ActiveCampaign
@@ -85,6 +98,32 @@ function alphaform_send_integrations_handler() {
         if (!$ok) wp_send_json_error('Erro no envio para o Mailchimp');
     }
 
+    if (in_array('email', $actions)) {
+        require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/email.php';
+        $ok = alphaform_send_email($form_data);
+        if (!$ok) wp_send_json_error('Erro ao enviar o e-mail.');
+    }
+
+    if (in_array('webhook', $actions)) {
+        $form_data_hook = [];
+        $ignorar = ['action', 'nonce', 'actions', 'post_id', 'widget_id', 'listaId', 'listaIdMC', 'email', 'first_name'];
+
+
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $ignorar)) continue;
+
+            // Permite arrays (como campos de múltipla escolha)
+            $form_data_hook[$key] = is_array($value)
+                ? array_map('sanitize_text_field', $value)
+                : sanitize_text_field($value);
+        }
+        error_log(json_encode($form_data_hook, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/webhook.php';
+        $ok = alphaform_send_to_webhook($form_data_hook, $_POST['webhook_url'] ?? '');
+        if (!$ok) wp_send_json_error('Erro no envio para o Webhook.');
+    }
+
+
+
     wp_send_json_success('Dados enviados com sucesso para as integrações.');
 }
-

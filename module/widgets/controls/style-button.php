@@ -112,7 +112,7 @@ function register_style_botao_controls(Widget_Base $widget)
         'button_border_style',
         [
             'label' => __('Borda do Botão', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::SELECT,
+            'type' => Controls_Manager::SELECT,
             'default' => 'none',
             'options' => [
                 'none' => 'Nenhuma',

@@ -82,9 +82,9 @@ function alpha_form_add_user_dashboard_menu()
     );
 
     add_submenu_page(
-        null, // Não aparece no menu
+        'alpha-form-dashboard', // Não aparece no menu
         'Visualizar Resposta',
-        'Visualizar Resposta',
+        '',
         'manage_options',
         'alpha-form-view-response',
         function () {
@@ -149,13 +149,26 @@ function alpha_form_admin_assets($hook)
         true
     );
 
-    wp_localize_script('alpha-form-dashboard-script', 'alphaFormDashboardVars', [
+    wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', [], null, true);
+    wp_enqueue_script('chart-geo', 'https://cdn.jsdelivr.net/npm/chartjs-chart-geo', ['chartjs'], null);
+
+    wp_localize_script('alpha-form-dashboard-script', 'alpha_form_nonce', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('alphaFormDashboardVars'),
-        'plugin_url' => ALPHA_FORM_PLUGIN_URL
+        'nonce' => wp_create_nonce('alpha_form_nonce'),
+        'plugin_url' => ALPHA_FORM_PLUGIN_URL,
+        'assetsUrl' => ALPHA_FORM_PLUGIN_URL . 'assets/img/',
     ]);
     wp_enqueue_script('alpha-form-admin-script', ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'), true);
 }
+
+function alpha_form_enqueue_select2()
+{
+    wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
+    wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', ['jquery'], null, true);
+}
+add_action('admin_enqueue_scripts', 'alpha_form_enqueue_select2');
+add_action('wp_enqueue_scripts', 'alpha_form_enqueue_select2'); // caso precise no frontend
+
 add_action('admin_enqueue_scripts', 'alpha_form_admin_assets');
 
 function alpha_form_enqueue_front_assets()
@@ -192,6 +205,7 @@ add_action('elementor/editor/after_enqueue_scripts', function () {
         'post_id' => $post->ID ?? 0,
     ]);
 });
+
 
 
 // =====================================================

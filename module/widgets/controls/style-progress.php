@@ -4,6 +4,7 @@ namespace AlphaFormPremium\Module\Controls;
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Border;
 use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
 use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
 
@@ -162,7 +163,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     );
     
     $widget->add_group_control(
-        \Elementor\Group_Control_Border::get_type(),
+        Group_Control_Border::get_type(),
         [
             'name' => 'prograss_border',
             'selector' => '{{WRAPPER}} .alpha-form-progress',

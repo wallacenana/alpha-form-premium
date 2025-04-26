@@ -27,12 +27,12 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
 
     $options = [
         'store'    => 'Coletar Submissão',
+        'email'    => 'Enviar email',
         'redirect' => 'Redirecionar',
     ];
 
     if (afp_is_license_valid()) {
         $options['webhook'] = 'Webhook';
-        $options['email'] = 'Enviar email';
 
         // Adiciona dinamicamente integrações ativas
         if (is_array($active_integrations)) {
@@ -79,9 +79,9 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
 
     $widget->end_controls_section();
 
-    // Sessão: Webhook
+    // 1. Ação do Widget - controles no Elementor
     $widget->start_controls_section(
-        'section_action_webhook',
+        'section_webhook_settings',
         [
             'label' => __('[Ação] Webhook', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_CONTENT,
@@ -96,12 +96,9 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         [
             'label' => __('URL do Webhook', 'alpha-form-premium'),
             'type' => Controls_Manager::TEXT,
-            'placeholder' => 'https://api.exemplo.com/endpoint',
             'label_block' => true,
-            'condition' => [
-                'actions' => 'webhook',
-            ],
-            'description' => 'Disponível apenas na versão PRO do plugin.',
+            'placeholder' => __('https://sua-api.com/webhook', 'alpha-form-premium'),
+            'default' => '',
         ]
     );
 
@@ -279,7 +276,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->add_control(
         'active_alert',
         [
-            'type' => \Elementor\Controls_Manager::RAW_HTML,
+            'type' => Controls_Manager::RAW_HTML,
             'raw' => '<strong>⚠️ Clique em "publicar" antes de clicar no botão e usar as opções abaixo.</strong>',
             'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
         ]
@@ -289,7 +286,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         'ajax_button',
         [
             'label' => __('Clique para receber dados', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::BUTTON,
+            'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
             'text' => __('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:send_click',
@@ -305,7 +302,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
             'map_field_' . $field_id,
             [
                 'label' => $field_label,
-                'type' => \Elementor\Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT,
                 'options' => [], // Será preenchido via JS
                 'default' => '',
                 'condition' => [
@@ -332,7 +329,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         $widget->add_control(
             'mailchimp_alert',
             [
-                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'type' => Controls_Manager::RAW_HTML,
                 'raw' => '<strong>⚠️ Configure sua API Key e Audience ID do Mailchimp nas configurações do plugin.</strong>',
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
             ]
@@ -344,7 +341,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->add_control(
         'mailchimp_alert2',
         [
-            'type' => \Elementor\Controls_Manager::RAW_HTML,
+            'type' => Controls_Manager::RAW_HTML,
             'raw' => '<strong>⚠️ Clique em "publicar" antes de clicar no botão e usar as opções abaixo.</strong>',
             'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
         ]
@@ -354,7 +351,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         'ajax_button_mc',
         [
             'label' => __('Clique para receber dados', 'alpha-form-premium'),
-            'type' => \Elementor\Controls_Manager::BUTTON,
+            'type' => Controls_Manager::BUTTON,
             'button_type' => 'success',
             'text' => __('Receber', 'alpha-form-premium'),
             'event' => 'alphaform:editor:send_click',
@@ -440,7 +437,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         $field_label = $field['title'] ?? $field['id'];
 
         $widget->add_control(
-            'map_field_' . $field_id,
+            'map_field_' . $field_id . '_mc',
             [
                 'label' => $field_label,
                 'type' => Controls_Manager::SELECT,
