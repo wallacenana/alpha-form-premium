@@ -42,14 +42,16 @@ function register_form_visualizacoes_controls(Widget_Base $widget)
         ]
     );
 
-    $widget->add_control('enable_geolocation', [
-        'label' => __('Ativar Geolocalização', 'alpha-form-premium'),
-        'type' => Controls_Manager::SWITCHER,
-        'label_on' => __('Sim', 'alpha-form-premium'),
-        'label_off' => __('Não', 'alpha-form-premium'),
-        'return_value' => 'yes',
-        'default' => 'yes',
-    ]);
+    $widget->add_control(
+        'text_auxiliar',
+        [
+            'label' => __('Texto Auxiliar', 'alpha-form-premium'),
+            'type' => Controls_Manager::TEXT,
+            'default' => 'Escolha uma opção',
+            'placeholder' => __('Escolha uma opção', 'alpha-form-premium'),
+            'label_block' => true,
+        ]
+    );
 
     $widget->end_controls_section();
 }

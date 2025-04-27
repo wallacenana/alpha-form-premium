@@ -37,7 +37,7 @@ function register_style_input_controls(Widget_Base $widget)
             'label' => __('Cor do Texto', 'alpha-form-premium'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -48,7 +48,7 @@ function register_style_input_controls(Widget_Base $widget)
             'label' => __('Cor de Fundo', 'alpha-form-premium'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -57,7 +57,7 @@ function register_style_input_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'input_border',
-            'selector' => '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)',
+            'selector' => '{{WRAPPER}} .alpha-form-input input:not(.radio):not(.checkbox):not(select):not(.select):not(.select):not([type="checkbox"])',
         ]
     );
 
@@ -75,7 +75,7 @@ function register_style_input_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input' =>
+                '{{WRAPPER}} .alpha-form-input:not(select)' =>
                 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
@@ -88,7 +88,7 @@ function register_style_input_controls(Widget_Base $widget)
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );

@@ -34,18 +34,20 @@ function render_alpha_form_fields($settings, $widget_id)
 
             echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
             echo '<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>';
-            if ($field['field_descricao'])
-                echo '<p class="alpha-form-description">' . wp_kses_post($field['field_descricao']) . '</p>';
+            if (!empty($field['field_descricao'])) {
+                echo '<div class="alpha-form-description">' . wp_kses_post($field['field_descricao']) . '</div>';
+            }
 
             switch ($type) {
-                case 'textarea':
-                    echo '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . ' autofocus>';
+                case 'intro':
+                    echo '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . ' autofocus rows="5">';
                     echo esc_html($default);
                     echo '</textarea>';
                     break;
 
                 case 'select':
-                    echo '<select id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" class="alpha-form-input ' . esc_attr($class) . '" ' . esc_attr($required) . '>';
+                    echo '<div class="alpha-form-input select" data-style="' . esc_attr($style) . '">';
+                    echo '<select id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" class="' . esc_attr($class) . '" ' . esc_attr($required) . '>';
                     $options = explode("\n", $field['field_options'] ?? '');
                     foreach ($options as $opt) {
                         $opt = trim($opt);
@@ -57,7 +59,10 @@ function render_alpha_form_fields($settings, $widget_id)
                         }
                         echo '<option value="' . esc_attr($value_option) . '">' . esc_html($label_option) . '</option>';
                     }
-                    echo '</select>';
+                    echo '</select>
+                        </div>';
+                    if ($settings['text_auxiliar'])
+                        echo '<div class="alpha-text-auxiliar">' . esc_html($settings['text_auxiliar']) . '</div>';
                     break;
 
                 case 'intro':
@@ -66,7 +71,7 @@ function render_alpha_form_fields($settings, $widget_id)
                 case 'acceptance':
                     $text = $field['acceptance_text'] ?? 'Li e aceito a política de privacidade.';
                     echo '<div class="alpha-form-input ' . esc_attr($class) . '">';
-                    echo '<label><input type="checkbox" name="' . esc_attr($id) . '" ' . esc_attr($required) . '> ' . esc_html($text) . '</label>';
+                    echo '<label class="acceptance"><input type="checkbox" name="' . esc_attr($id) . '" ' . esc_attr($required) . '> ' . esc_html($text) . '</label>';
                     echo '</div>';
                     break;
 
@@ -92,18 +97,22 @@ function render_alpha_form_fields($settings, $widget_id)
                         echo '<input type="radio" class="toggle" id="' . esc_attr($input_id) . '" name="' . esc_attr($id) . '" value="' . esc_attr($value_option) . '" ' . esc_attr($required) . '>';
                         $label_attrs = '';
                         if ($show_hint) {
-                            $label_attrs .= ' data-letter="' . $letter . '"';
-                            $label_attrs .= ' data-icon="✓"';
+                            $label_attrs .= ' data-letter=' . $letter . '';
+                            $label_attrs .= ' data-icon=✓';
                         }
                         echo '<label for="' . esc_attr($input_id) . '"' . esc_attr($label_attrs) . '>' . esc_html($label_option) . '</label>';
                     }
                     echo '</div>';
+                    if ($settings['text_auxiliar'])
+                        echo '<div class="alpha-text-auxiliar">' . esc_html($settings['text_auxiliar']) . '</div>';
                     break;
 
                 case 'checkbox':
                     $options = explode("\n", $field['field_options'] ?? '');
-                    echo '<div class="alpha-form-input ' . esc_attr($class) . '">';
-                    foreach ($options as $opt) {
+                    $style   = $settings['checkbox_icon_style'] ?? 'abc';
+                    $show_hint = $field['key-hint'] === 'yes';
+                    echo '<div class="alpha-form-input checkbox" data-style="' . esc_attr($style) . '">';
+                    foreach ($options as $index => $opt) {
                         $opt = trim($opt);
                         if (!$opt) continue;
                         if (str_contains($opt, '|')) {
@@ -111,9 +120,19 @@ function render_alpha_form_fields($settings, $widget_id)
                         } else {
                             $label_option = $value_option = $opt;
                         }
-                        echo '<label><input type="checkbox" name="' . esc_attr($id) . '[]" value="' . esc_attr($value_option) . '" ' . esc_attr($required) . '> ' . esc_html($label_option) . '</label><br>';
+                        $input_id = esc_attr($id . '_' . $index);
+                        $letter = chr(65 + $index); // A, B, C...
+                        echo '<input type="checkbox" class="toggle" id="' . esc_attr($input_id) . '" name="' . esc_attr($id) . '" value="' . esc_attr($value_option) . '" ' . esc_attr($required) . '>';
+                        $label_attrs = '';
+                        if ($show_hint) {
+                            $label_attrs .= ' data-letter=' . $letter . '';
+                            $label_attrs .= ' data-icon=✓';
+                        }
+                        echo '<label for="' . esc_attr($input_id) . '"' . esc_attr($label_attrs) . '>' . esc_html($label_option) . '</label>';
                     }
                     echo '</div>';
+                    if ($settings['text_auxiliar'])
+                        echo '<div class="alpha-text-auxiliar">' . esc_html($settings['text_auxiliar']) . '</div>';
                     break;
 
                 default:
@@ -121,7 +140,7 @@ function render_alpha_form_fields($settings, $widget_id)
                     break;
             }
 
-            if (!in_array($type, ['select', 'checkbox', 'radio', 'acceptance']) && $btn_text) {
+            if (!in_array($type, ['select', 'radio', 'acceptance']) && $btn_text) {
                 echo '<button type="button" class="alpha-form-next-button">' . esc_html($btn_text) . '</button>';
             }
 

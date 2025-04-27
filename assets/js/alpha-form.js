@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
     // Radio auto avanço
     wrapper.querySelectorAll('input[type="radio"]').forEach((radio) => {
         radio.addEventListener('change', () => {
@@ -156,8 +155,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+    wrapper.querySelectorAll('select').forEach((select) => {
+        select.addEventListener('change', () => {
+            const field = select.closest('.alpha-form-field');
+            const index = Array.from(fields).indexOf(field);
 
+            saveFieldData(field);
 
+            if (index >= 0 && index < fields.length - 1) {
+                currentIndex = index + 1;
+                showField(currentIndex);
+            }
+        });
+    });
 
 
     let sessionId;

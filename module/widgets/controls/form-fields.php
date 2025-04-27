@@ -90,10 +90,14 @@ function register_form_fields_controls(Widget_Base $widget)
         'field_descricao',
         [
             'label' => __('Descrição', 'alpha-form-premium'),
-            'type' => Controls_Manager::TEXTAREA,
+            'type' => Controls_Manager::WYSIWYG,
             'default' => '',
+            'condition' => [
+                'field_type!' => ['hidden'],
+            ],
         ]
     );
+
 
     $repeater->add_control(
         'field_placeholder',
@@ -102,10 +106,11 @@ function register_form_fields_controls(Widget_Base $widget)
             'type' => Controls_Manager::TEXT,
             'default' => '',
             'condition' => [
-                'field_type!' => ['select', 'radio', 'checkbox', 'date', 'time', 'intro'],
+                'field_type!' => ['select', 'radio', 'checkbox', 'date', 'time', 'intro', 'hidden'],
             ],
         ]
     );
+
 
     $repeater->add_control(
         'field_options',
@@ -129,7 +134,7 @@ function register_form_fields_controls(Widget_Base $widget)
             'default' => 'Ok',
             'placeholder' => 'ex: Continuar',
             'condition' => [
-                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'hidden', 'date', 'time', 'intro'],
+                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'intro', 'checkbox'],
             ],
         ]
     );
@@ -172,7 +177,7 @@ function register_form_fields_controls(Widget_Base $widget)
             ],
         ]
     );
-    
+
     $repeater->end_controls_tab();
 
     $repeater->start_controls_tab(
