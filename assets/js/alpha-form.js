@@ -1,99 +1,353 @@
+// Prepara variáveis
+let currentIndex = 0;
+let sessionId;
+let latitude = '';
+let longitude = '';
+let geoTimeout;
+
+const wrapper = document.querySelector('.alpha-form-wrapper');
+const fields = wrapper.querySelectorAll('.alpha-form-field');
+const allNextButtons = wrapper.querySelectorAll('.alpha-form-next-button, .alpha-form-next-button-x');
+const prevBtn = wrapper.querySelector('.alpha-form-prev-button-x');
+const pageViewSavedKey = 'alpha_form_page_view_saved_' + sessionId;
+
+function generateSessionId() {
+    return 'afp_' + Math.random().toString(36).substr(2, 9) + Date.now();
+}
+
 function mostrarLoader() {
     document.getElementById('alphaform-overlay').style.display = 'flex';
 }
+
 function esconderLoader() {
     document.getElementById('alphaform-overlay').style.display = 'none';
 }
-document.addEventListener('DOMContentLoaded', function () {
-    const wrapper = document.querySelector('.alpha-form-wrapper');
-    if (!wrapper) return;
 
-    const fields = wrapper.querySelectorAll('.alpha-form-field');
-    const allNextButtons = wrapper.querySelectorAll('.alpha-form-next-button, .alpha-form-next-button-x');
-    const prevBtn = wrapper.querySelector('.alpha-form-prev-button-x');
+function showError(input, message) {
+    const error = document.createElement('p');
+    error.className = 'alpha-error';
+    error.textContent = message;
+    input.after(error);
+}
 
-    let currentIndex = 0;
+function validateField(field) {
+    const input = field.querySelector('input:not([type=hidden]), textarea, select');
+    const type = input?.type;
+    const isRequired = input?.hasAttribute('required');
 
-    function showField(index, direction = 'forward') {
-        if (index < 0 || index >= fields.length) return;
+    // Remove erro anterior
+    field.querySelector('.alpha-error')?.remove();
 
-        // Detecta se o próximo campo é hidden
-        const currentField = fields[index];
-        const isHidden = !!currentField.querySelector('input[type="hidden"]');
-
-        if (isHidden) {
-            // Pula para frente ou para trás, dependendo da direção
-            const nextIndex = direction === 'forward' ? index + 1 : index - 1;
-            showField(nextIndex, direction);
-            currentIndex = nextIndex;
-            return;
-        }
-
-        // Exibe o campo atual
-        fields.forEach((f, i) => {
-            f.classList.toggle('active', i === index);
-        });
-
-        updateProgressBar(index);
-        currentIndex = index;
-
-        // Foco automático
-        const focusable = currentField.querySelector('input:not([type="hidden"]), textarea, select');
-        if (focusable) {
-            setTimeout(() => focusable.focus(), 100);
-        }
-    }
-
-
-
-    function showError(input, message) {
-        const error = document.createElement('p');
-        error.className = 'alpha-error';
-        error.textContent = message;
-        input.after(error);
-    }
-
-    function validateField(field) {
-        const input = field.querySelector('input:not([type=hidden]), textarea, select');
-        const type = input?.type;
-        const isRequired = input?.hasAttribute('required');
-
-        // Remove erro anterior
-        field.querySelector('.alpha-error')?.remove();
-
-        if (type === 'radio') {
-            const groupName = input.name;
-            const selected = field.querySelector(`input[name="${groupName}"]:checked`);
-            if (isRequired && !selected) {
-                showError(input, 'Escolha uma opção.');
-                return false;
-            }
-            return true;
-        }
-
-        const value = input?.value?.trim();
-        if (isRequired && !value) {
-            showError(input, 'Este campo é obrigatório.');
+    if (type === 'radio') {
+        const groupName = input.name;
+        const selected = field.querySelector(`input[name="${groupName}"]:checked`);
+        if (isRequired && !selected) {
+            showError(input, 'Escolha uma opção.');
             return false;
         }
-
-        if (type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-            showError(input, 'Informe um e-mail válido.');
-            return false;
-        }
-
-        if (type === 'tel' && value && !/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/.test(value)) {
-            showError(input, 'Telefone inválido. Ex: (11) 91234-5678');
-            return false;
-        }
-
-        if (type === 'url' && value && !/^https?:\/\/[^\s]+$/.test(value)) {
-            showError(input, 'URL inválida.');
-            return false;
-        }
-
         return true;
     }
+
+    const value = input?.value?.trim();
+    if (isRequired && !value) {
+        showError(input, 'Este campo é obrigatório.');
+        return false;
+    }
+
+    if (type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        showError(input, 'Informe um e-mail válido.');
+        return false;
+    }
+
+    if (type === 'tel' && value && !/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/.test(value)) {
+        showError(input, 'Telefone inválido. Ex: (11) 91234-5678');
+        return false;
+    }
+
+    if (type === 'url' && value && !/^https?:\/\/[^\s]+$/.test(value)) {
+        showError(input, 'URL inválida.');
+        return false;
+    }
+
+    // Validação adicional para campos mascarados
+    const maskType = input?.dataset.mask;
+    if (isRequired && maskType && value) {
+        let digits = value.replace(/\D/g, '');
+
+        if (maskType === 'cpf' && digits.length !== 11) {
+            showError(input, 'CPF inválido.');
+            return false;
+        }
+
+        if (maskType === 'cnpj' && digits.length !== 14) {
+            showError(input, 'CNPJ inválido.');
+            return false;
+        }
+
+        if (maskType === 'cep' && digits.length !== 8) {
+            showError(input, 'CEP inválido.');
+            return false;
+        }
+
+        if (maskType === 'credit_card' && digits.length !== 16) {
+            showError(input, 'Número de cartão inválido.');
+            return false;
+        }
+
+        if (maskType === 'currency' && !/^\d+,\d{2}$/.test(value)) {
+            showError(input, 'Valor inválido.');
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function showField(index, direction = 'forward') {
+    if (index < 0 || index >= fields.length) return;
+
+    // Detecta se o próximo campo é hidden
+    const currentField = fields[index];
+    const isHidden = !!currentField.querySelector('input[type="hidden"]');
+
+    if (isHidden) {
+        // Pula para frente ou para trás, dependendo da direção
+        const nextIndex = direction === 'forward' ? index + 1 : index - 1;
+        showField(nextIndex, direction);
+        currentIndex = nextIndex;
+        return;
+    }
+
+    // Exibe o campo atual
+    fields.forEach((f, i) => {
+        f.classList.toggle('active', i === index);
+    });
+
+    updateProgressBar(index);
+    currentIndex = index;
+
+    // Foco automático
+    const focusable = currentField.querySelector('input:not([type="hidden"]), textarea, select');
+    if (focusable) {
+        setTimeout(() => focusable.focus(), 100);
+    }
+}
+
+function salvarPageView() {
+    const dummyField = document.querySelector('.alpha-form');
+    if (dummyField) {
+        dummyField.dataset.geoLat = latitude || '';
+        dummyField.dataset.geoLng = longitude || '';
+
+        saveFieldData(dummyField);
+        localStorage.setItem(pageViewSavedKey, '1');
+    }
+}
+
+function saveFieldData(fieldElement) {
+    const input = fieldElement.querySelector('input, textarea, select');
+    if (!input) return;
+
+    let value;
+
+    if (input.type === 'checkbox') {
+        const checkboxes = fieldElement.querySelectorAll(`input[name="${input.name}"]:checked`);
+        value = Array.from(checkboxes).map(cb => cb.value);
+    } else if (input.type === 'radio') {
+        const selected = fieldElement.querySelector(`input[name="${input.name}"]:checked`);
+        value = selected ? selected.value : '';
+    } else {
+        value = input.value?.trim();
+    }
+
+
+    const form = fieldElement.closest('form');
+    const formId = form?.dataset.formId || 'alpha_form_undefined';
+    const widgetId = form.dataset.widgetId;
+    const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
+
+    const extraData = {
+        duration: Math.round(performance.now() / 1000), // tempo em segundos desde o carregamento da página
+        lang: navigator.language || '',
+        platform: navigator.platform || '',
+        device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+        user_agent: navigator.userAgent || '',
+        ip_address: '', // será captado pelo backend se não estiver usando serviço externo
+        browser: (() => {
+            const ua = navigator.userAgent;
+            if (ua.includes("Chrome")) return "Chrome";
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+            if (ua.includes("Edge")) return "Edge";
+            return "Outro";
+        })()
+    };
+
+    const data = {
+        action: 'alpha_form_save_response',
+        form_id: formId,
+        session_id: sessionId,
+        nonce: alphaFormVars.nonce,
+        widgetId: widgetId,
+        postId: postId,
+        latitude: latitude,
+        longitude: longitude,
+        response: JSON.stringify({
+            [input.name]: value
+        }),
+        ...extraData
+    };
+
+    fetch(alphaFormVars.ajaxurl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data)
+    })
+        .then(res => res.json())
+        .then(response => {
+            if (!response.success) {
+                console.warn('❌ Erro ao salvar resposta:', response.data?.message || 'Erro desconhecido');
+                if (response.data?.sql_error) {
+                    console.log('📛 SQL Error:', response.data.sql_error);
+                }
+                if (response.data?.debug_data) {
+                    console.log('📦 Dados enviados:', response.data.debug_data);
+                }
+            }
+        })
+        .catch(err => {
+            console.error('🚨 Erro na requisição:', err);
+        });
+}
+
+function updateProgressBar(index) {
+    const visible = document.querySelector('.alpha-form-progress-container');
+    if (!visible)
+        return
+    const allSteps = document.querySelectorAll('.alpha-form-step');
+
+    // Filtra os campos visíveis (exclui hidden e a introdução)
+    const visibleSteps = Array.from(allSteps).filter((step, i) => {
+        const input = step.querySelector('input, textarea, select');
+        const isHidden = input?.type === 'hidden';
+        const isIntro = i === 0;
+        const isSubmit = step.querySelector('button[type="submit"]');
+        return !isHidden && !isIntro && !isSubmit;
+    });
+
+    const progressBar = document.querySelector('.alpha-form-progress-fill');
+    const progressText = document.querySelector('.alpha-form-progress-text');
+
+    const currentStep = allSteps[index];
+    const visibleIndex = visibleSteps.indexOf(currentStep);
+
+    // Total real = campos visíveis + 1 (para o submit)
+    const total = visibleSteps.length + 1;
+
+    // Se for o campo final (submit), já mostra 100%
+    if (currentStep && currentStep.querySelector('button[type="submit"]')) {
+        progressBar.style.width = '100%';
+        progressText.textContent = '100%';
+        return;
+    }
+
+    // Se o campo não está na lista visível (ex: introdução ou hidden), zera
+    if (visibleIndex === -1) {
+        progressBar.style.width = '0%';
+        progressText.textContent = '0%';
+        return;
+    }
+
+    // Calcula o progresso normalmente
+    const percent = Math.round((visibleIndex + 1) / total * 100);
+
+    progressBar.style.width = percent + '%';
+    progressText.textContent = percent + '%';
+}
+
+function applyMasks() {
+    document.querySelectorAll('[data-mask]').forEach(function(input) {
+        const maskType = input.dataset.mask;
+
+        input.addEventListener('input', function(e) {
+            let value = input.value.replace(/\D/g, ''); // só números
+
+            if (maskType === 'cpf') {
+                value = value.substring(0, 11);
+
+                if (value.length <= 3) {
+                    value = value.replace(/(\d{1,3})/, '$1');
+                } else if (value.length <= 6) {
+                    value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                } else if (value.length <= 9) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                } else {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                }
+            }
+
+            if (maskType === 'cnpj') {
+                value = value.substring(0, 14);
+
+                if (value.length <= 2) {
+                    value = value.replace(/(\d{1,2})/, '$1');
+                } else if (value.length <= 5) {
+                    value = value.replace(/(\d{2})(\d{1,3})/, '$1.$2');
+                } else if (value.length <= 8) {
+                    value = value.replace(/(\d{2})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                } else if (value.length <= 12) {
+                    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{1,4})/, '$1.$2.$3/$4');
+                } else {
+                    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})/, '$1.$2.$3/$4-$5');
+                }
+            }
+
+            if (maskType === 'cep') {
+                value = value.substring(0, 8);
+
+                if (value.length <= 5) {
+                    value = value.replace(/(\d{1,5})/, '$1');
+                } else {
+                    value = value.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+                }
+            }
+
+            if (maskType === 'phone') {
+                value = value.substring(0, 11);
+
+                if (value.length <= 2) {
+                    value = value.replace(/(\d{1,2})/, '($1');
+                } else if (value.length <= 6) {
+                    value = value.replace(/(\d{2})(\d{1,4})/, '($1) $2');
+                } else if (value.length <= 10) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+                } else {
+                    value = value.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
+                }
+            }
+
+            if (maskType === 'currency') {
+                value = value.replace(/\D/g, ''); // remove tudo que não é número
+            
+                if (value.length > 0) {
+                    value = (parseFloat(value) / 100).toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                } else {
+                    value = '';
+                }
+            }
+            
+
+            input.value = value;
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (!wrapper) return;
 
     // Avanço automático por clique
     allNextButtons.forEach((btn) => {
@@ -131,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const isValid = validateField(field);
                 if (!isValid) return;
 
-                saveFieldData(field); // ✅ Salva os dados antes de avançar
+                saveFieldData(field);
 
                 if (index < fields.length - 1) {
                     currentIndex = index + 1;
@@ -169,13 +423,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
-    let sessionId;
-
-    function generateSessionId() {
-        return 'afp_' + Math.random().toString(36).substr(2, 9) + Date.now();
-    }
-
     const sessionKey = 'alpha_form_session_id';
     const sessionExpireKey = 'alpha_form_session_expire';
     const now = Date.now();
@@ -190,13 +437,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem(sessionKey, sessionId);
         localStorage.setItem(sessionExpireKey, now + 2 * 60 * 1000); // 2 minutos de vida
     }
-
-    const pageViewSavedKey = 'alpha_form_page_view_saved_' + sessionId;
-
-    // Prepara variáveis
-    let latitude = '';
-    let longitude = '';
-    let geoTimeout;
 
     if (!localStorage.getItem(pageViewSavedKey)) {
         if (!navigator.geolocation) {
@@ -228,93 +468,52 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function salvarPageView() {
-        const dummyField = document.querySelector('.alpha-form');
-        if (dummyField) {
-            dummyField.dataset.geoLat = latitude || '';
-            dummyField.dataset.geoLng = longitude || '';
+    applyMasks();
+    showField(currentIndex);
+});
 
-            saveFieldData(dummyField);
-            localStorage.setItem(pageViewSavedKey, '1');
-        }
+
+window.addEventListener('load', function () {
+    const sessionId = localStorage.getItem('alpha_form_session_id');
+    const latitude = localStorage.getItem('alpha_form_user_latitude');
+    const longitude = localStorage.getItem('alpha_form_user_longitude');
+
+    if (!sessionId) {
+        console.warn('[AlphaFormGeo] sem session');
+        return;
+    }
+    if (latitude === null) {
+        return;
+    }
+    if (longitude === null) {
+        return;
     }
 
-    function saveFieldData(fieldElement) {
-        const input = fieldElement.querySelector('input, textarea, select');
-        if (!input) return;
+    const geoSavedKey = 'alpha_form_geo_saved_' + sessionId;
+    if (localStorage.getItem(geoSavedKey)) {
+        return;
+    }
 
-        let value;
+    const data = {
+        action: 'alpha_form_save_geo',
+        nonce: alphaFormVars.nonce,
+        session_id: sessionId,
+        latitude: latitude,
+        longitude: longitude
+    };
 
-        if (input.type === 'checkbox') {
-            const checkboxes = fieldElement.querySelectorAll(`input[name="${input.name}"]:checked`);
-            value = Array.from(checkboxes).map(cb => cb.value);
-        } else if (input.type === 'radio') {
-            const selected = fieldElement.querySelector(`input[name="${input.name}"]:checked`);
-            value = selected ? selected.value : '';
-        } else {
-            value = input.value?.trim();
-        }
-
-
-        const form = fieldElement.closest('form');
-        const formId = form?.dataset.formId || 'alpha_form_undefined';
-        const widgetId = form.dataset.widgetId;
-        const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
-
-        const extraData = {
-            duration: Math.round(performance.now() / 1000), // tempo em segundos desde o carregamento da página
-            lang: navigator.language || '',
-            platform: navigator.platform || '',
-            device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-            user_agent: navigator.userAgent || '',
-            ip_address: '', // será captado pelo backend se não estiver usando serviço externo
-            browser: (() => {
-                const ua = navigator.userAgent;
-                if (ua.includes("Chrome")) return "Chrome";
-                if (ua.includes("Firefox")) return "Firefox";
-                if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
-                if (ua.includes("Edge")) return "Edge";
-                return "Outro";
-            })()
-        };
-
-        const data = {
-            action: 'alpha_form_save_response',
-            form_id: formId,
-            session_id: sessionId,
-            nonce: alphaFormVars.nonce,
-            widgetId: widgetId,
-            postId: postId,
-            latitude: latitude,
-            longitude: longitude,
-            response: JSON.stringify({
-                [input.name]: value
-            }),
-            ...extraData
-        };
-
-        fetch(alphaFormVars.ajaxurl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(data)
+    fetch(alphaFormVars.ajaxurl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data)
+    })
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                localStorage.setItem(geoSavedKey, '1');
+            } else {
+            }
         })
-            .then(res => res.json())
-            .then(response => {
-                if (!response.success) {
-                    console.warn('❌ Erro ao salvar resposta:', response.data?.message || 'Erro desconhecido');
-                    if (response.data?.sql_error) {
-                        console.log('📛 SQL Error:', response.data.sql_error);
-                    }
-                    if (response.data?.debug_data) {
-                        console.log('📦 Dados enviados:', response.data.debug_data);
-                    }
-                }
-            })
-            .catch(err => {
-                console.error('🚨 Erro na requisição:', err);
-            });
-    }
 
     document.querySelectorAll('.alpha-form').forEach(form => {
         form.addEventListener('submit', async function (e) {
@@ -427,95 +626,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
     });
-
-    function updateProgressBar(index) {
-        const visible = document.querySelector('.alpha-form-progress-container');
-        if (!visible)
-            return
-        const allSteps = document.querySelectorAll('.alpha-form-step');
-
-        // Filtra os campos visíveis (exclui hidden e a introdução)
-        const visibleSteps = Array.from(allSteps).filter((step, i) => {
-            const input = step.querySelector('input, textarea, select');
-            const isHidden = input?.type === 'hidden';
-            const isIntro = i === 0;
-            const isSubmit = step.querySelector('button[type="submit"]');
-            return !isHidden && !isIntro && !isSubmit;
-        });
-
-        const progressBar = document.querySelector('.alpha-form-progress-fill');
-        const progressText = document.querySelector('.alpha-form-progress-text');
-
-        const currentStep = allSteps[index];
-        const visibleIndex = visibleSteps.indexOf(currentStep);
-
-        // Total real = campos visíveis + 1 (para o submit)
-        const total = visibleSteps.length + 1;
-
-        // Se for o campo final (submit), já mostra 100%
-        if (currentStep && currentStep.querySelector('button[type="submit"]')) {
-            progressBar.style.width = '100%';
-            progressText.textContent = '100%';
-            return;
-        }
-
-        // Se o campo não está na lista visível (ex: introdução ou hidden), zera
-        if (visibleIndex === -1) {
-            progressBar.style.width = '0%';
-            progressText.textContent = '0%';
-            return;
-        }
-
-        // Calcula o progresso normalmente
-        const percent = Math.round((visibleIndex + 1) / total * 100);
-
-        progressBar.style.width = percent + '%';
-        progressText.textContent = percent + '%';
-    }
-
-    showField(currentIndex);
-});
-
-
-window.addEventListener('load', function () {
-    const sessionId = localStorage.getItem('alpha_form_session_id');
-    const latitude = localStorage.getItem('alpha_form_user_latitude');
-    const longitude = localStorage.getItem('alpha_form_user_longitude');
-
-    if (!sessionId) {
-        console.warn('[AlphaFormGeo] sem session');
-        return;
-    }
-    if (latitude === null) {
-        return;
-    }
-    if (longitude === null) {
-        return;
-    }
-
-    const geoSavedKey = 'alpha_form_geo_saved_' + sessionId;
-    if (localStorage.getItem(geoSavedKey)) {
-        return;
-    }
-
-    const data = {
-        action: 'alpha_form_save_geo',
-        nonce: alphaFormVars.nonce,
-        session_id: sessionId,
-        latitude: latitude,
-        longitude: longitude
-    };
-
-    fetch(alphaFormVars.ajaxurl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data)
-    })
-        .then(res => res.json())
-        .then(response => {
-            if (response.success) {
-                localStorage.setItem(geoSavedKey, '1');
-            } else {
-            }
-        })
 });

@@ -40,21 +40,25 @@ function register_form_fields_controls(Widget_Base $widget)
             'label' => __('Tipo do Campo', 'alpha-form-premium'),
             'type' => Controls_Manager::SELECT,
             'options' => [
-                'text'     => 'Texto',
-                'email'    => 'Email',
-                'textarea' => 'Área de Texto',
-                'tel'      => 'Telefone',
-                'url'      => 'URL',
-                'number'   => 'Número',
-                'password' => 'Senha',
-                'radio'    => 'Escolha Única',
-                'checkbox' => 'Múltiplas Escolhas',
-                'select'   => 'Select',
-                'date'     => 'Data',
-                'time'     => 'Hora',
-                'hidden'   => 'Oculto',
-                'acceptance'   => 'Aceitação',
-                'intro'   => 'Texto simples',
+                'text'      => 'Texto',
+                'email'     => 'Email',
+                'textarea'  => 'Área de Texto',
+                'tel'       => 'Telefone',
+                'url'       => 'URL',
+                'number'    => 'Número',
+                'password'  => 'Senha',
+                'radio'     => 'Escolha Única',
+                'checkbox'  => 'Múltiplas Escolhas',
+                'select'    => 'Select',
+                'date'      => 'Data',
+                'time'      => 'Hora',
+                'hidden'    => 'Oculto',
+                'acceptance' => 'Aceitação',
+                'intro'     => 'Texto simples',
+                'cpf'       => 'CPF',
+                'cnpj'      => 'CNPJ',
+                'cep'       => 'CEP',
+                'currency'  => 'Moeda',
             ],
             'default' => 'text',
         ]
@@ -134,7 +138,7 @@ function register_form_fields_controls(Widget_Base $widget)
             'default' => 'Ok',
             'placeholder' => 'ex: Continuar',
             'condition' => [
-                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'intro', 'checkbox'],
+                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'date', 'time', 'intro', 'checkbox', 'cpf', 'cnpj', 'cep', 'currency'],
             ],
         ]
     );
@@ -173,6 +177,10 @@ function register_form_fields_controls(Widget_Base $widget)
                     'radio',
                     'checkbox',
                     'date',
+                    'cpf',
+                    'cnpj',
+                    'cep',
+                    'currency'
                 ],
             ],
         ]
@@ -196,7 +204,7 @@ function register_form_fields_controls(Widget_Base $widget)
             'type' => Controls_Manager::TEXT,
             'default' => '',
             'condition' => [
-                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'hidden', 'text'],
+                'field_type' => ['text', 'email', 'textarea', 'tel', 'url', 'number', 'password', 'hidden', 'text', 'cpf', 'cnpj', 'cep', 'currency'],
             ],
         ]
     );

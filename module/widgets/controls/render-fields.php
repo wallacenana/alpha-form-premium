@@ -29,6 +29,10 @@ function render_alpha_form_fields($settings, $widget_id)
             $show_required = $settings['show_required_mark'] === 'yes';
             $btn_text    = $field['next_button_text'] ?? '';
             $step_class  = 'alpha-form-step' . ($i === 0 ? ' active' : '');
+            $special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'credit_card'];
+
+            $mask = in_array($type, $special_masks) ? ' data-mask="' . esc_attr($type) . '"' : '';
+
 
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
@@ -40,7 +44,9 @@ function render_alpha_form_fields($settings, $widget_id)
 
             switch ($type) {
                 case 'intro':
-                    echo '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" ' . esc_attr($required) . ' autofocus rows="5">';
+                    echo '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" data-shortcode="' .
+                        esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' .
+                        esc_attr($placeholder) . '" ' . esc_attr($required) . ' autofocus rows="5">';
                     echo esc_html($default);
                     echo '</textarea>';
                     break;
@@ -70,7 +76,7 @@ function render_alpha_form_fields($settings, $widget_id)
 
                 case 'acceptance':
                     $text = $field['acceptance_text'] ?? 'Li e aceito a política de privacidade.';
-                    echo '<div class="alpha-form-input ' . esc_attr($class) . '">';
+                    echo '<div class="alpha-form-input acceptance' . esc_attr($class) . '">';
                     echo '<label class="acceptance"><input type="checkbox" name="' . esc_attr($id) . '" ' . esc_attr($required) . '> ' . esc_html($text) . '</label>';
                     echo '</div>';
                     break;
@@ -136,7 +142,7 @@ function render_alpha_form_fields($settings, $widget_id)
                     break;
 
                 default:
-                    echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($id) . '" name="' . esc_attr($id) . '"  data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($default) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . ' autofocus>';
+                    echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($id) . '" name="' . esc_attr($id) . '"  data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($default) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . $mask . ' autofocus>';
                     break;
             }
 

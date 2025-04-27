@@ -57,7 +57,7 @@ function register_style_input_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'input_border',
-            'selector' => '{{WRAPPER}} .alpha-form-input input:not(.radio):not(.checkbox):not(select):not(.select):not(.select):not([type="checkbox"])',
+            'selector' => '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select):not(.select):not(.select):not([type="checkbox"]):not(.acceptance)',
         ]
     );
 
