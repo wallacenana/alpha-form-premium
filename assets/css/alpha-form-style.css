@@ -730,6 +730,10 @@ textarea {
     background-color: var(--cor-branco);
     color: var(--cor-black);
 }
+.alpha-form-input.select select {
+     padding-right: 3rem;
+    
+}
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #347af41f;

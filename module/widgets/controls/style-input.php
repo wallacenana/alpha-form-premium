@@ -75,7 +75,7 @@ function register_style_input_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(select)' =>
+                '{{WRAPPER}} .alpha-form-input:not(.alpha-form-input.select)' =>
                 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]

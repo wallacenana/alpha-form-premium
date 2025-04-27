@@ -73,6 +73,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             ],
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-input.select select svg' => 'fill: {{VALUE}};',
             ],
         ]
     );
