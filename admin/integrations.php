@@ -126,14 +126,17 @@ $integrations = [
 
 // 🔄 Processamento
 $feedback = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && current_user_can('manage_options')) {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && current_user_can('manage_options')) {
     foreach ($integrations as $slug => $integration) {
         if (isset($_POST["validate_$slug"])) {
             check_admin_referer("alpha_form_validate_$slug", "alpha_form_{$slug}_nonce");
             $data = [];
 
             foreach ($integration['fields'] as $field_key => $field) {
-                $data[$field_key] = sanitize_text_field($_POST["alpha_form_{$slug}_{$field_key}"] ?? '');
+                $value = isset($_POST["alpha_form_{$slug}_{$field_key}"])
+                    ? sanitize_text_field(wp_unslash($_POST["alpha_form_{$slug}_{$field_key}"]))
+                    : '';
+                $data[$field_key] = $value;
             }
 
             try {
@@ -146,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && current_user_can('manage_options'))
     }
 }
 ?>
+
 
 <div class="wrap alpha-form-wrap">
     <h1>Integrações</h1>

@@ -111,9 +111,10 @@ function alphaform_get_stats_overview()
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_responses';
 
-    $hoje = date('Y-m-d');
-    $semana = date('Y-m-d', strtotime('-7 days'));
-    $mes = date('Y-m-d', strtotime('-30 days'));
+    $hoje = gmdate('Y-m-d');
+    $semana = gmdate('Y-m-d', strtotime('-7 days'));
+    $mes = gmdate('Y-m-d', strtotime('-30 days'));
+
 
     $results = [];
 

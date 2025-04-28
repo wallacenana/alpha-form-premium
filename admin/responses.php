@@ -1,15 +1,20 @@
 <?php
-// Caminho: admin/pages/responses.php
+// Caminho sugerido: /admin/pages/response-view.php
+if (!current_user_can('manage_options')) {
+    wp_die('Acesso negado.');
+}
 
-if (!defined('ABSPATH')) exit;
+if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'alpha_form_responses_list')) {
+    wp_die('Acesso negado (nonce inválido).');
+}
 
 // Configuração de paginação
 $per_page = 20;
-$current_page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+$current_page = isset($_GET['paged']) ? max(1, intval(sanitize_text_field(wp_unslash($_GET['paged'])))) : 1;
 $offset = ($current_page - 1) * $per_page;
 
 // Filtro por widget_id
-$widget_id = isset($_GET['widget_id']) ? sanitize_text_field($_GET['widget_id']) : '';
+$widget_id = isset($_GET['widget_id']) ? sanitize_text_field(wp_unslash($_GET['widget_id'])) : '';
 
 // Tabela personalizada
 global $wpdb;
@@ -25,13 +30,18 @@ if ($widget_id) {
 
 // Total de registros
 $total = $widget_id
-    ? $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table WHERE widget_id = %s", $widget_id))
-    : $wpdb->get_var("SELECT COUNT(*) FROM $table");
+    ?
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table WHERE widget_id = %s", $widget_id))
+    :
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $wpdb->get_var("SELECT COUNT(*) FROM $table");
 
 // Resultados com paginação
 $sql = "SELECT id, form_id, session_id, postId, widget_id, submitted_at FROM $table $where ORDER BY submitted_at DESC LIMIT %d OFFSET %d";
 $params[] = $per_page;
 $params[] = $offset;
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $results = $wpdb->get_results($wpdb->prepare($sql, ...$params));
 
 // Renderização
@@ -61,8 +71,16 @@ $results = $wpdb->get_results($wpdb->prepare($sql, ...$params));
                         <td><?php echo esc_html($row->form_id); ?></td>
                         <td><?php echo esc_html($row->postId); ?></td>
                         <td><?php echo esc_html($row->widget_id); ?></td>
-                        <td><?php echo esc_html(date('d/m/Y H:i', strtotime($row->submitted_at))); ?></td>
-                        <td><a href="<?php echo admin_url('admin.php?page=alpha-form-view-response&id=' . $row->id) ?>" class="button button-small">Ver Detalhes</a></td>
+                        <td><?php echo esc_html(gmdate('d/m/Y H:i', strtotime($row->submitted_at))); ?></td>
+                        <td>
+                            <a href="<?php echo esc_url(
+                                            wp_nonce_url(
+                                                admin_url('admin.php?page=alpha-form-view-response&id=' . intval($row->id)),
+                                                'alpha_form_view_response',
+                                                '_wpnonce'
+                                            )
+                                        ); ?>" class="button button-small">Ver Detalhes</a>
+                        </td>
 
                     </tr>
                 <?php endforeach; ?>
@@ -80,14 +98,15 @@ $results = $wpdb->get_results($wpdb->prepare($sql, ...$params));
         $base_url = admin_url('admin.php?page=alpha-form-responses');
         if ($widget_id) $base_url .= '&widget_id=' . urlencode($widget_id);
         echo '<div class="tablenav"><div class="tablenav-pages">';
-        echo paginate_links([
+        echo wp_kses_post(paginate_links([
             'base' => $base_url . '&paged=%#%',
             'format' => '',
             'current' => $current_page,
             'total' => $total_pages,
             'prev_text' => '<i class="dashicons dashicons-arrow-left-alt2"></i>',
-            'next_text' => '<i class="dashicons dashicons-arrow-right-alt2"></i>'
-        ]);
+            'next_text' => '<i class="dashicons dashicons-arrow-right-alt2"></i>',
+        ]));
+
         echo '</div></div>';
     endif;
     ?>

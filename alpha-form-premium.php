@@ -140,7 +140,13 @@ function alpha_form_admin_assets($hook)
 {
     if (strpos($hook, 'alpha-form-') === false) return;
 
-    wp_enqueue_style('alpha-form-admin-style', ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css'));
+    wp_enqueue_style(
+        'alpha-form-admin-style',
+        ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css',
+        [],
+        filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css')
+    );
+
     wp_enqueue_script(
         'alpha-form-dashboard-script',
         ALPHA_FORM_PLUGIN_URL . 'assets/js/dashboard.js',
@@ -149,8 +155,13 @@ function alpha_form_admin_assets($hook)
         true
     );
 
-    wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', [], null, true);
-    wp_enqueue_script('chart-geo', 'https://cdn.jsdelivr.net/npm/chartjs-chart-geo', ['chartjs'], null);
+    wp_enqueue_script(
+        'chartjs',
+        'https://cdn.jsdelivr.net/npm/chart.js',
+        [],
+        '4.4.0', // 👈 define manualmente a versão da CDN
+        true
+    );
 
     wp_localize_script('alpha-form-dashboard-script', 'alpha_form_nonce', [
         'ajaxurl' => admin_url('admin-ajax.php'),
@@ -158,14 +169,34 @@ function alpha_form_admin_assets($hook)
         'plugin_url' => ALPHA_FORM_PLUGIN_URL,
         'assetsUrl' => ALPHA_FORM_PLUGIN_URL . 'assets/img/',
     ]);
-    wp_enqueue_script('alpha-form-admin-script', ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'), true);
+
+    wp_enqueue_script(
+        'alpha-form-admin-script',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js',
+        [],
+        filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'),
+        true
+    );
 }
 
 function alpha_form_enqueue_select2()
 {
-    wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
-    wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', ['jquery'], null, true);
+    wp_enqueue_style(
+        'select2-css',
+        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+        [],
+        '4.1.0-rc.0' // 👈 coloca a versão
+    );
+
+    wp_enqueue_script(
+        'select2-js',
+        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
+        ['jquery'],
+        '4.1.0-rc.0',
+        true // 👈 e define para rodapé
+    );
 }
+
 add_action('admin_enqueue_scripts', 'alpha_form_enqueue_select2');
 add_action('wp_enqueue_scripts', 'alpha_form_enqueue_select2'); // caso precise no frontend
 

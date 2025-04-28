@@ -4,6 +4,12 @@ if (!current_user_can('manage_options')) {
     wp_die('Acesso negado.');
 }
 
+if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'alpha_form_view_response')) {
+    wp_die('Acesso negado (nonce inválido).');
+}
+
+
+
 $response_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if (!$response_id) {
@@ -13,7 +19,7 @@ if (!$response_id) {
 
 global $wpdb;
 $table = $wpdb->prefix . 'alpha_form_responses';
-$response = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $response_id));
+$response = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id = %d", $table, $response_id));
 
 if (!$response) {
     echo '<div class="notice notice-error"><p>Resposta não encontrada.</p></div>';
@@ -27,7 +33,6 @@ $labels = alphaform_map_labels_from_widget($response->postId, $response->widget_
 
 <div class="wrap alpha-form-wrap">
     <h1 class="wp-heading-inline">Detalhes da Resposta</h1>
-    <a href="<?php echo admin_url('admin.php?page=alpha-form-responses&widget_id=' . esc_attr($response->widget_id)); ?>" class="page-title-action">Voltar</a>
     <hr class="wp-header-end">
 
     <table class="widefat fixed striped">

@@ -8,24 +8,43 @@ function alphaform_get_form_widget_count_handle()
 
     global $wpdb;
     $response = [];
+    $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Quantidade de formulários únicos (baseado em widget_id)
-    $response['total_forms'] = (int) $wpdb->get_var("
-        SELECT COUNT(DISTINCT widget_id)
-        FROM {$wpdb->prefix}alpha_form_responses
-    ");
+    $response['total_forms'] = (int) $wpdb->get_var(
+        $wpdb->prepare(
+            "
+            SELECT COUNT(DISTINCT widget_id)
+            FROM %i
+            ",
+            $table
+        )
+    );
+
 
     // Total de respostas
-    $response['total_responses'] = (int) $wpdb->get_var("
-        SELECT COUNT(*)
-        FROM {$wpdb->prefix}alpha_form_responses
-    ");
+    $response['total_responses'] = (int) $wpdb->get_var(
+        $wpdb->prepare(
+            "
+            SELECT COUNT(*)
+            FROM %i
+            ",
+            $table
+        )
+    );
+
 
     // Última submissão
-    $response['total_integrations'] = (int) $wpdb->get_var("
-        SELECT COUNT(*)
-        FROM {$wpdb->prefix}alpha_form_integrations
-    ");
+    $response['total_integrations'] = (int) $wpdb->get_var(
+        $wpdb->prepare(
+            "
+            SELECT COUNT(*)
+            FROM %i
+            ",
+            $wpdb->prefix . 'alpha_form_integrations'
+        )
+    );
+
 
     // Retorno final
     wp_send_json_success($response);
@@ -39,28 +58,31 @@ function alphaform_get_dashboard_stats()
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
     global $wpdb;
-    $widget_ids = isset($_GET['widget_ids']) ? (array) $_GET['widget_ids'] : [];
+    $table = $wpdb->prefix . 'alpha_form_responses';
+
+    $widget_ids = isset($_GET['widget_ids']) ? array_map('sanitize_text_field', (array) wp_unslash($_GET['widget_ids'])) : [];
 
     if ($widget_ids)
         $placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
     else
         $placeholders = "";
     // Datas principais
-    $startThisWeek = date('Y-m-d', strtotime('last sunday'));
-    $endThisWeek   = date('Y-m-d', strtotime('next saturday'));
+    $startThisWeek = gmdate('Y-m-d', strtotime('last sunday'));
+    $endThisWeek   = gmdate('Y-m-d', strtotime('next saturday'));
 
-    $startLastWeek = date('Y-m-d', strtotime('last sunday -7 days'));
-    $endLastWeek   = date('Y-m-d', strtotime('last saturday'));
+    $startLastWeek = gmdate('Y-m-d', strtotime('last sunday -7 days'));
+    $endLastWeek   = gmdate('Y-m-d', strtotime('last saturday'));
 
-    $startMonth = date('Y-m-01');
-    $startLastMonth = date('Y-m-01', strtotime('first day of last month'));
-    $endLastMonth   = date('Y-m-t', strtotime('last month'));
+    $startMonth = gmdate('Y-m-01');
+    $startLastMonth = gmdate('Y-m-01', strtotime('first day of last month'));
+    $endLastMonth   = gmdate('Y-m-t', strtotime('last month'));
 
-    $inicio = sanitize_text_field($_GET['inicio'] ?? date('Y-m-d', strtotime('-15 days'))) . ' 00:00:00';
-    $fim    = sanitize_text_field($_GET['fim'] ?? date('Y-m-d')) . ' 23:59:59';
+    $inicio = sanitize_text_field(isset($_GET['inicio']) ? wp_unslash($_GET['inicio']) : gmdate('Y-m-d', strtotime('-15 days'))) . ' 00:00:00';
+    $fim    = sanitize_text_field(isset($_GET['fim']) ? wp_unslash($_GET['fim']) : gmdate('Y-m-d')) . ' 23:59:59';
+
 
     // Submissões
-    $today      = alphaform_get_results(date('Y-m-d') . ' 00:00:00', date('Y-m-d') . ' 23:59:59', $widget_ids);
+    $today = alphaform_get_results(gmdate('Y-m-d') . ' 00:00:00', gmdate('Y-m-d') . ' 23:59:59', $widget_ids);
     $week       = alphaform_get_results($startThisWeek, $endThisWeek, $widget_ids);
     $last_week  = alphaform_get_results($startLastWeek, $endLastWeek, $widget_ids);
     $month      = alphaform_get_results($startMonth, '', $widget_ids);
@@ -74,7 +96,6 @@ function alphaform_get_dashboard_stats()
 
 
     // Submissões por dia (últimos 15)
-    $table = $wpdb->prefix . 'alpha_form_responses';
     $start = new DateTime($inicio);
     $end = new DateTime($fim);
     $interval = new DateInterval('P1D');
@@ -89,70 +110,113 @@ function alphaform_get_dashboard_stats()
         $dia = $date->format('Y-m-d');
         $labels[] = $dia;
 
-        // TOTAL
-        $total = $wpdb->get_var($wpdb->prepare(
-            "
-        SELECT COUNT(*) FROM $table
-        WHERE DATE(submitted_at) = %s AND page_view = 1 AND start_form = 0" . (!empty($widget_ids) ? " AND widget_id IN ($placeholders)" : ""),
-            $dia,
-            ...$widget_ids
-        ));
+        $prepar = '';
+        $params = [$dia];
+
+        $where_widgets = '';
+        if (!empty($widget_ids)) {
+            $widget_placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
+            $where_widgets = "AND widget_id IN ($widget_placeholders)";
+            $params = array_merge($params, $widget_ids);
+        }
+
+        $total = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+                SELECT COUNT(*) FROM %i
+                WHERE DATE(submitted_at) = %s
+                $where_widgets
+                AND page_view = 1
+                AND start_form = 0
+                ",
+                $table,
+                ...$params
+            )
+        );
+
 
         // CONCLUÍDOS
-        $concluidos = $wpdb->get_var($wpdb->prepare(
-            "
+        // Prepara os parâmetros
+
+        $concluidos = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+        SELECT COUNT(*) FROM %i
+        WHERE DATE(submitted_at) = %s
+        $where_widgets
+        AND concluido = 1
+        ",
+                $table,
+                ...$params
+            )
+        );
+
+
+        $forms_iniciados = $wpdb->get_var(
+            $wpdb->prepare(
+                "
         SELECT COUNT(*) FROM $table
-        WHERE DATE(submitted_at) = %s AND concluido = 1" . (!empty($widget_ids) ? " AND widget_id IN ($placeholders)" : ""),
-            $dia,
-            ...$widget_ids
-        ));
-        $forms_iniciados = $wpdb->get_var($wpdb->prepare(
-            "
-        SELECT COUNT(*) FROM $table
-        WHERE DATE(submitted_at) = %s AND page_view = 1 AND start_form = 1" . (!empty($widget_ids) ? " AND widget_id IN ($placeholders)" : ""),
-            $dia,
-            ...$widget_ids
-        ));
+        WHERE DATE(submitted_at) = %s
+        AND page_view = 1
+        AND start_form = 1
+        $prepar
+        ",
+                ...$params
+            )
+        );
+
 
         $values_total[] = (int) $total;
         $values_concluido[] = (int) $concluidos;
         $formularios_iniciados[] = (int) $forms_iniciados;
     }
 
+    $params = [$inicio, $fim];
+
     if (!empty($widget_ids)) {
-        $placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
-        $sql = "SELECT COUNT(*) FROM $table 
-                WHERE concluido = 1 
-                  AND submitted_at BETWEEN %s AND %s 
-                  AND widget_id IN ($placeholders)";
-        $params = array_merge([$inicio, $fim], $widget_ids);
-        $total_concluidos = $wpdb->get_var($wpdb->prepare($sql, ...$params));
+        $widget_placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
+        $where_widget = " AND widget_id IN ($widget_placeholders)";
+        $params = array_merge($params, $widget_ids);
     } else {
-        $total_concluidos = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $table 
-             WHERE concluido = 1 
-               AND submitted_at BETWEEN %s AND %s",
-            $inicio,
-            $fim
-        ));
+        $where_widget = '';
     }
 
-    $states = $wpdb->get_results($wpdb->prepare(
-        "
-        SELECT 
-            state,
-            COUNT(*) as total
-        FROM {$wpdb->prefix}alpha_form_responses
-        WHERE submitted_at BETWEEN %s AND %s
-          AND state IS NOT NULL
-          AND state != ''
-          " . (!empty($widget_ids) ? "AND widget_id IN (" . implode(',', array_fill(0, count($widget_ids), '%s')) . ")" : "") . "
-        GROUP BY state
-        ORDER BY total DESC
-        LIMIT 10
-        ",
-        ...array_merge([$inicio, $fim], $widget_ids)
-    ));
+    $total_concluidos = $wpdb->get_var($wpdb->prepare("
+        SELECT COUNT(*)
+        FROM $table
+        WHERE concluido = 1
+        AND submitted_at BETWEEN %s %s AND %s
+        
+    ", $where_widget, ...$params));
+
+
+    $widget_filter = '';
+    $params = [$inicio, $fim];
+
+    if (!empty($widget_ids)) {
+        $widget_placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
+        $widget_filter = " AND widget_id IN ($widget_placeholders)";
+        $params = array_merge($params, $widget_ids);
+    }
+
+    $states = $wpdb->get_results(
+        $wpdb->prepare(
+            "
+            SELECT 
+                state,
+                COUNT(*) as total
+            FROM $table
+            WHERE submitted_at BETWEEN %s AND %s
+              AND state IS NOT NULL
+              AND state != ''
+              $widget_filter
+            GROUP BY state
+            ORDER BY total DESC
+            LIMIT 10
+            ",
+            ...$params
+        )
+    );
 
     $states_data = array_map(function ($row) {
         return [
@@ -175,6 +239,17 @@ function alphaform_get_dashboard_stats()
     }
 
     // Tempo de permanência
+    $params = [$inicio, $fim];
+
+    // Se tiver widget IDs
+    if (!empty($widget_ids)) {
+        $widget_placeholders = implode(',', array_fill(0, count($widget_ids), '%s'));
+        $where_widgets = "AND widget_id IN ($widget_placeholders)";
+        $params = array_merge($params, $widget_ids);
+    } else {
+        $where_widgets = '';
+    }
+
     $duracao_stats = $wpdb->get_row(
         $wpdb->prepare(
             "
@@ -184,18 +259,20 @@ function alphaform_get_dashboard_stats()
             AVG(duration) as avg_duration
         FROM $table
         WHERE submitted_at BETWEEN %s AND %s
-        " . (!empty($widget_ids) ? "AND widget_id IN ($placeholders)" : ""),
-            ...array_merge([$inicio, $fim], $widget_ids)
+        $where_widgets
+        ",
+            ...$params
         ),
         ARRAY_A
     );
+
 
     // 1. Já temos leads do período atual:
     $leads_periodo_atual = $leads; // Já tem isso no código
 
     // Normalizar datas
-    $inicioSemHora = date('Y-m-d', strtotime($inicio));
-    $fimSemHora = date('Y-m-d', strtotime($fim));
+    $inicioSemHora = gmdate('Y-m-d', strtotime($inicio));
+    $fimSemHora = gmdate('Y-m-d', strtotime($fim));
 
     // Calcular intervalo de dias
     $inicioDate = new DateTime($inicioSemHora);
@@ -204,11 +281,10 @@ function alphaform_get_dashboard_stats()
     $quantidadeDias = (int) $interval->format('%a');
 
     // Pegar período anterior
-    $inicio_periodo_anterior = date('Y-m-d', strtotime("-{$quantidadeDias} days", strtotime($inicioSemHora))) . ' 00:00:00';
-    $fim_periodo_anterior = date('Y-m-d', strtotime("-1 day", strtotime($inicioSemHora))) . ' 23:59:59';
+    $inicio_periodo_anterior = gmdate('Y-m-d', strtotime("-{$quantidadeDias} days", strtotime($inicioSemHora))) . ' 00:00:00';
+    $fim_periodo_anterior = gmdate('Y-m-d', strtotime("-1 day", strtotime($inicioSemHora))) . ' 23:59:59';
 
 
-    error_log($inicio . " Ttste " . $fim . "anterior= " . $inicio_periodo_anterior);
     // 4. Buscar leads do período anterior
     $leads_periodo_anterior = alphaform_get_results($inicio_periodo_anterior, $fim_periodo_anterior, $widget_ids, 'COUNT(*)', [
         'start_form' => 1
@@ -256,6 +332,7 @@ function alphaform_get_dashboard_stats()
         ],
     ]);
 }
+
 function alphaform_get_results($inicio = null, $fim = null, $widget_ids = [], $aggregate = 'COUNT(*)', $extra_conditions = [])
 {
     global $wpdb;
@@ -285,6 +362,7 @@ function alphaform_get_results($inicio = null, $fim = null, $widget_ids = [], $a
     }
 
     $sql = $wpdb->prepare("SELECT $aggregate FROM $table WHERE $where", ...$params);
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared	
     return $wpdb->get_var($sql);
 }
 

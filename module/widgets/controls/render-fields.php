@@ -37,7 +37,7 @@ function render_alpha_form_fields($settings, $widget_id)
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
             echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
-            echo '<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>';
+            echo wp_kses_post('<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>');
             if (!empty($field['field_descricao'])) {
                 echo '<div class="alpha-form-description">' . wp_kses_post($field['field_descricao']) . '</div>';
             }
@@ -142,7 +142,7 @@ function render_alpha_form_fields($settings, $widget_id)
                     break;
 
                 default:
-                    echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($id) . '" name="' . esc_attr($id) . '"  data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($default) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . $mask . ' autofocus>';
+                    echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($id) . '" name="' . esc_attr($id) . '"  data-shortcode="' . esc_attr($shortcode) . '" class="alpha-form-input' . esc_attr($class) . '" placeholder="' . esc_attr($placeholder) . '" value="' . esc_attr($default) . '" pattern="' . esc_attr($pattern) . '" ' . esc_attr($required) . esc_attr($mask) . ' autofocus>';
                     break;
             }
 
@@ -216,7 +216,7 @@ function render_alpha_form_fields($settings, $widget_id)
     echo '</div>'; // .alpha-form-wrapper
     echo '<div id="alphaform-overlay" style="display:none;">
             <div class="alphaform-loader-box">
-                <img src="' . ALPHA_FORM_PLUGIN_URL . 'assets/img/alphaform-loader-bcb992ad.gif' . '" alt="Carregando..." width="30">
+                <img src="' . esc_url(ALPHA_FORM_PLUGIN_URL . 'assets/img/alphaform-loader-bcb992ad.gif') . '" alt="Carregando..." width="30">
                 </div>
             </div>';
 

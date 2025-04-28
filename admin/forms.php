@@ -1,14 +1,38 @@
 <?php
-// Caminho: /admin/pages/forms.php
+
 if (!defined('ABSPATH')) exit;
+function alpha_form_get_widget_totals()
+{
+    global $wpdb;
 
-global $wpdb;
-$table = $wpdb->prefix . 'alpha_form_responses';
+    $table = $wpdb->prefix . 'alpha_form_responses';
+    $cache_key = 'alpha_form_widget_totals';
+    $cache_group = 'alpha_form';
 
-// Consulta agrupando por widget_id
-$results = $wpdb->get_results("SELECT widget_id, MAX(form_id) as form_id, COUNT(*) as total, MAX(postId) as postId FROM {$table} GROUP BY widget_id", ARRAY_A);
+    $results = wp_cache_get($cache_key, $cache_group);
+
+    if (false === $results) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $results = $wpdb->get_results($wpdb->prepare(
+            "
+            SELECT widget_id, MAX(form_id) AS form_id, COUNT(*) AS total, MAX(postId) AS postId
+            FROM %i
+            GROUP BY widget_id
+            ",
+            $table
+        ), ARRAY_A);
+
+        if (!empty($results)) {
+            wp_cache_set($cache_key, $results, $cache_group, 300);
+        }
+    }
+
+    return $results;
+}
+$results = alpha_form_get_widget_totals();
 
 ?>
+
 <div class="wrap alpha-form-wrap">
     <h1 class="wp-heading-inline">Formulários</h1>
     <p class="description">Lista de todos os formulários enviados pelo Alpha Form, agrupados por Widget ID.</p>
@@ -32,7 +56,7 @@ $results = $wpdb->get_results("SELECT widget_id, MAX(form_id) as form_id, COUNT(
                     $widget_id = esc_html($row['widget_id']);
                 ?>
                     <tr>
-                        <td><code><?php echo $widget_id; ?></code></td>
+                        <td><code><?php echo esc_html($widget_id); ?></code></td>
                         <td><?php echo esc_html($row['form_id']) ?? 'Desconhecido'; ?></td>
                         <td>
                             <?php if ($post_title && $post_url) : ?>
@@ -43,7 +67,14 @@ $results = $wpdb->get_results("SELECT widget_id, MAX(form_id) as form_id, COUNT(
                         </td>
                         <td><strong><?php echo intval($row['total']); ?></strong></td>
                         <td>
-                            <a href="admin.php?page=alpha-form-responses&widget_id=<?php echo $widget_id; ?>" class="button">Ver Respostas</a>
+                            <a href="<?php echo esc_url(
+                                            wp_nonce_url(
+                                                admin_url('admin.php?page=alpha-form-responses&widget_id=' . urlencode($widget_id)),
+                                                'alpha_form_responses_list',
+                                                '_wpnonce'
+                                            )
+                                        ); ?>" class="button">Ver Respostas</a>
+
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -3,7 +3,7 @@
 add_action('wp_ajax_alphaform_get_repeater_fields', function () {
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $widget_id = sanitize_text_field($_POST['widget_id'] ?? '');
+    $widget_id = isset($_POST['widget_id']) ? sanitize_text_field(wp_unslash($_POST['widget_id'])) : '';
     $post_id = intval($_POST['post_id'] ?? 0);
 
     if (!$widget_id || !$post_id) {

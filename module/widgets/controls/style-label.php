@@ -72,8 +72,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_SECONDARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select' => 'color: {{VALUE}};',
-                '{{WRAPPER}} .alpha-form-input.select select svg' => 'fill: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select' => 'color: {{VALUE}};'
             ],
         ]
     );
@@ -225,7 +224,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_radio_style',
         [
-            'label' => __('Key hint', 'alpha-form'),
+            'label' => __('Key hint', 'alpha-form-premium'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -234,7 +233,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_border_color',
         [
-            'label' => __('Cor da Borda', 'alpha-form'),
+            'label' => __('Cor da Borda', 'alpha-form-premium'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-color: {{VALUE}};',
@@ -244,7 +243,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_color',
         [
-            'label' => __('Cor do texto', 'alpha-form'),
+            'label' => __('Cor do texto', 'alpha-form-premium'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'color: {{VALUE}};',
@@ -256,7 +255,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_background_color',
         [
-            'label' => __('Cor de Fundo', 'alpha-form'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium'),
             'type' => Controls_Manager::COLOR,
             'default' => 'transparent',
             'selectors' => [
@@ -269,7 +268,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_size',
         [
-            'label' => __('Tamanho do Indicador', 'alpha-form'),
+            'label' => __('Tamanho do Indicador', 'alpha-form-premium'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -288,7 +287,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_border_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -305,7 +304,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_position_left',
         [
-            'label' => __('Posição (Esquerda)', 'alpha-form'),
+            'label' => __('Posição (Esquerda)', 'alpha-form-premium'),
             'type' => \Elementor\Controls_Manager::SLIDER,
             'size_units' => ['px', '%', 'em', 'rem'],
             'range' => [
