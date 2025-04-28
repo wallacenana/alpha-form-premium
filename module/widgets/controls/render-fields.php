@@ -52,7 +52,7 @@ function render_alpha_form_fields($settings, $widget_id)
                     break;
 
                 case 'select':
-                    echo '<div class="alpha-form-input select" data-style="' . esc_attr($style) . '">';
+                    echo '<div class="alpha-form-input select">';
                     echo '<select id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" class="' . esc_attr($class) . '" ' . esc_attr($required) . '>';
                     $options = explode("\n", $field['field_options'] ?? '');
                     foreach ($options as $opt) {

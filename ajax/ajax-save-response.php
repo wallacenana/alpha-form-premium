@@ -7,35 +7,34 @@ function alpha_form_save_response()
     check_ajax_referer('alpha_form_nonce', 'nonce');
     global $wpdb;
 
-    $form_id      = sanitize_text_field($_POST['form_id'] ?? '');
-    $event_type   = intval($_POST['event_type'] ?? '');
-    $session_id   = sanitize_text_field($_POST['session_id'] ?? '');
-    $widget_id    = sanitize_text_field($_POST['widgetId'] ?? '');
-    $postId       = sanitize_text_field($_POST['postId'] ?? '');
-    $duration     = intval($_POST['duration'] ?? 0);
-    $lang         = sanitize_text_field($_POST['lang'] ?? '');
-    $platform     = sanitize_text_field($_POST['platform'] ?? '');
-    $device_type  = sanitize_text_field($_POST['device_type'] ?? '');
-    $timezone     = sanitize_text_field($_POST['timezone'] ?? '');
-    $user_agent   = sanitize_textarea_field($_POST['user_agent'] ?? '');
-    $ip_address   = $_SERVER['REMOTE_ADDR'] ?? '';
-    $geo_lat      = sanitize_text_field($_POST['latitude']) ?? null;
-    $geo_lng      =  sanitize_text_field($_POST['longitude']) ?? null;
-    $browser      = sanitize_text_field($_POST['browser'] ?? '');
+    $form_id      = sanitize_text_field(wp_unslash($_POST['form_id'] ?? ''));
+    $event_type   = intval(wp_unslash($_POST['event_type'] ?? ''));
+    $session_id   = sanitize_text_field(wp_unslash($_POST['session_id'] ?? ''));
+    $widget_id    = sanitize_text_field(wp_unslash($_POST['widgetId'] ?? ''));
+    $postId       = sanitize_text_field(wp_unslash($_POST['postId'] ?? ''));
+    $duration     = intval(wp_unslash($_POST['duration'] ?? 0));
+    $lang         = sanitize_text_field(wp_unslash($_POST['lang'] ?? ''));
+    $platform     = sanitize_text_field(wp_unslash($_POST['platform'] ?? ''));
+    $device_type  = sanitize_text_field(wp_unslash($_POST['device_type'] ?? ''));
+    $timezone     = sanitize_text_field(wp_unslash($_POST['timezone'] ?? ''));
+    $user_agent   = sanitize_textarea_field(wp_unslash($_POST['user_agent'] ?? ''));
+    $ip_address   = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+    $geo_lat      = sanitize_text_field(wp_unslash($_POST['latitude'] ?? ''));
+    $geo_lng      = isset($_POST['longitude']) ? sanitize_text_field(wp_unslash($_POST['longitude'])) : null;
+    $browser      = isset($_POST['browser']) ? sanitize_text_field(wp_unslash($_POST['browser'])) : '';
 
-    $response   = isset($_POST['response']) ? json_decode(stripslashes($_POST['response']), true) : [];
+    $response = isset($_POST['response']) ? json_decode(sanitize_text_field(wp_unslash($_POST['response'])), true) : [];
 
     if (!$form_id || !$session_id || empty($response) || empty($widget_id)) {
         wp_send_json_error(['message' => 'Campos obrigatórios ausentes.']);
     }
 
-    error_log($event_type);
-
     $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Verifica se já existe registro para essa sessão + formulário
     $existing = $wpdb->get_var($wpdb->prepare(
-        "SELECT id FROM $table WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
+        "SELECT id FROM %i WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
+        $table,
         $form_id,
         $session_id,
         $widget_id,
@@ -45,7 +44,8 @@ function alpha_form_save_response()
     if ($existing) {
         // Atualiza o JSON existente
         $existing_json = $wpdb->get_var($wpdb->prepare(
-            "SELECT data FROM $table WHERE id = %d",
+            "SELECT data FROM %i WHERE id = %d",
+            $table,
             $existing
         ));
 
@@ -120,26 +120,30 @@ function alphaform_get_stats_overview()
 
     // Total hoje
     $results['today'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE DATE(submitted_at) = %s",
+        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) = %s",
+        $table,
         $hoje
     ));
 
     // Total semana
     $results['week'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE DATE(submitted_at) >= %s",
+        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) >= %s",
+        $table,
         $semana
     ));
 
     // Total mês
     $results['month'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE DATE(submitted_at) >= %s",
+        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) >= %s",
+        $table,
         $mes
     ));
 
     // Sessões únicas (visitas)
-    $results['visits'] = (int) $wpdb->get_var(
-        "SELECT COUNT(DISTINCT session_id) FROM $table"
-    );
+    $results['visits'] = (int) $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(DISTINCT session_id) FROM %i",
+        $table
+    ));
 
     wp_send_json_success($results);
 }
@@ -150,11 +154,9 @@ add_action('wp_ajax_alpha_form_save_geo', 'alpha_form_save_geo_callback');
 
 function alpha_form_save_geo_callback()
 {
-    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'alpha_form_nonce')) {
-        wp_send_json_error(['message' => 'Nonce inválido.']);
-    }
+    check_ajax_referer('alpha_form_nonce', 'nonce');
 
-    $session_id = sanitize_text_field($_POST['session_id'] ?? '');
+    $session_id = isset($_POST['session_id']) ? sanitize_text_field(wp_unslash($_POST['session_id'])) : '';
     $latitude = isset($_POST['latitude']) ? floatval($_POST['latitude']) : null;
     $longitude = isset($_POST['longitude']) ? floatval($_POST['longitude']) : null;
 
