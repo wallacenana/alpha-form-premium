@@ -18,8 +18,29 @@ if (!$response_id) {
 }
 
 global $wpdb;
-$table = $wpdb->prefix . 'alpha_form_responses';
-$response = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id = %d", $table, $response_id));
+
+$table = esc_sql($wpdb->prefix . 'alpha_form_responses');
+$cache_key = 'alpha_form_response_' . (int) $response_id;
+
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+$response = wp_cache_get($cache_key, 'alpha_form');
+
+if (false === $response) {
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    $response = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT * FROM %i WHERE id = %d",
+            $table,
+            $response_id
+        )
+    );
+    // phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching
+
+    if (!is_null($response)) {
+        wp_cache_set($cache_key, $response, 'alpha_form', 600);
+    }
+}
+// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 if (!$response) {
     echo '<div class="notice notice-error"><p>Resposta não encontrada.</p></div>';
