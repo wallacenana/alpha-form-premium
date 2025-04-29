@@ -11,7 +11,7 @@ function alphaform_send_to_mailchimp($form_data)
     $server_prefix = '';
 
     if (!$api_key || !$list_id) {
-        error_log('[AlphaForm] Mailchimp - API key ou lista ausente.');
+        // error_log('[AlphaForm] Mailchimp - API key ou lista ausente.');
         return false;
     }
 
@@ -21,13 +21,13 @@ function alphaform_send_to_mailchimp($form_data)
     }
 
     if (!$server_prefix) {
-        error_log('[AlphaForm] Mailchimp - Prefixo do servidor inválido.');
+        // error_log('[AlphaForm] Mailchimp - Prefixo do servidor inválido.');
         return false;
     }
 
     $email = $form_data['email'] ?? '';
     if (empty($email)) {
-        error_log('[AlphaForm] Mailchimp - Email não fornecido.');
+        // error_log('[AlphaForm] Mailchimp - Email não fornecido.');
         return false;
     }
 
@@ -55,11 +55,11 @@ function alphaform_send_to_mailchimp($form_data)
 
         return true;
     } catch (\Exception $e) {
-        error_log('[AlphaForm] Mailchimp - Erro Detalhado: ' . $e->getMessage());
+        // error_log('[AlphaForm] Mailchimp - Erro Detalhado: ' . $e->getMessage());
 
         if (method_exists($e, 'getResponse')) {
             $body = (string) $e->getResponse()->getBody();
-            error_log('[AlphaForm] Mailchimp - Corpo da resposta: ' . $body);
+            // error_log('[AlphaForm] Mailchimp - Corpo da resposta: ' . $body);
         }
 
         return false;
