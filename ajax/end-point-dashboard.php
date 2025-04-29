@@ -11,39 +11,39 @@ function alphaform_get_form_widget_count_handle()
     $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Quantidade de formulários únicos (baseado em widget_id)
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $response['total_forms'] = (int) $wpdb->get_var(
         $wpdb->prepare(
             "
-            SELECT COUNT(DISTINCT widget_id)
-            FROM %i
-            ",
+        SELECT COUNT(DISTINCT widget_id)
+        FROM %i
+        ",
             $table
         )
     );
 
-
-    // Total de respostas
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $response['total_responses'] = (int) $wpdb->get_var(
         $wpdb->prepare(
             "
-            SELECT COUNT(*)
-            FROM %i
-            ",
+        SELECT COUNT(*)
+        FROM %i
+        ",
             $table
         )
     );
 
-
-    // Última submissão
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $response['total_integrations'] = (int) $wpdb->get_var(
         $wpdb->prepare(
             "
-            SELECT COUNT(*)
-            FROM %i
-            ",
+        SELECT COUNT(*)
+        FROM %i
+        ",
             $wpdb->prefix . 'alpha_form_integrations'
         )
     );
+
 
 
     // Retorno final
@@ -120,7 +120,8 @@ function alphaform_get_dashboard_stats()
             $params = array_merge($params, $widget_ids);
         }
 
-        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
         $total = $wpdb->get_var(
             $wpdb->prepare(
                 "
@@ -138,11 +139,11 @@ function alphaform_get_dashboard_stats()
         $concluidos = $wpdb->get_var(
             $wpdb->prepare(
                 "
-                SELECT COUNT(*) FROM %i
-                WHERE DATE(submitted_at) = %s
-                $where_widgets
-                AND concluido = 1
-                ",
+        SELECT COUNT(*) FROM %i
+        WHERE DATE(submitted_at) = %s
+        $where_widgets
+        AND concluido = 1
+        ",
                 $table,
                 ...$params
             )
@@ -151,17 +152,19 @@ function alphaform_get_dashboard_stats()
         $forms_iniciados = $wpdb->get_var(
             $wpdb->prepare(
                 "
-                SELECT COUNT(*) FROM $table
-                WHERE DATE(submitted_at) = %s
-                AND page_view = 1
-                AND start_form = 1
-                $prepar
-                ",
+        SELECT COUNT(*) FROM %i
+        WHERE DATE(submitted_at) = %s
+        AND page_view = 1
+        AND start_form = 1
+        $prepar
+        ",
+                $table,
                 ...$params
             )
         );
 
-        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
         $values_total[] = (int) $total;
         $values_concluido[] = (int) $concluidos;
         $formularios_iniciados[] = (int) $forms_iniciados;
@@ -178,20 +181,23 @@ function alphaform_get_dashboard_stats()
         $where_widget = '';
     }
 
-    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
     $total_concluidos = $wpdb->get_var(
         $wpdb->prepare(
             "
-            SELECT COUNT(*)
-            FROM %i
-            WHERE concluido = 1
-            AND submitted_at BETWEEN %s AND %s
-            ",
+        SELECT COUNT(*)
+        FROM %i
+        WHERE concluido = 1
+        AND submitted_at BETWEEN %s AND %s
+        ",
             $table,
             ...$params
         )
     );
-    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+
+    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 
     $widget_filter = '';
     $params = [$inicio, $fim];
@@ -202,29 +208,30 @@ function alphaform_get_dashboard_stats()
         $params = array_merge($params, $widget_ids);
     }
 
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
     $states = $wpdb->get_results(
         $wpdb->prepare(
             "
-            SELECT 
-                state,
-                COUNT(*) as total
-            FROM %i
-            WHERE submitted_at BETWEEN %s AND %s
-              AND state IS NOT NULL
-              AND state != ''
-              $widget_filter
-            GROUP BY state
-            ORDER BY total DESC
-            LIMIT 10
-            ",
+        SELECT 
+            state,
+            COUNT(*) as total
+        FROM %i
+        WHERE submitted_at BETWEEN %s AND %s
+          AND state IS NOT NULL
+          AND state != ''
+          $widget_filter
+        GROUP BY state
+        ORDER BY total DESC
+        LIMIT 10
+        ",
             $table,
             ...$params
         )
     );
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
     $states_data = array_map(function ($row) {
         return [
             'state' => $row->state,
@@ -257,8 +264,8 @@ function alphaform_get_dashboard_stats()
         $where_widgets = '';
     }
 
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
     $duracao_stats = $wpdb->get_row(
         $wpdb->prepare(
             "
@@ -276,10 +283,9 @@ function alphaform_get_dashboard_stats()
         ARRAY_A
     );
 
-    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber	
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-    $leads_periodo_atual = $leads; // Já tem isso no código
+    $leads_periodo_atual = $leads;
 
     // Normalizar datas
     $inicioSemHora = gmdate('Y-m-d', strtotime($inicio));
@@ -372,16 +378,10 @@ function alphaform_get_results($inicio = null, $fim = null, $widget_ids = [], $a
         $params[] = $value;
     }
 
-    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber	
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared		
-    // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared	
     $sql = $wpdb->prepare("SELECT COUNT(*) FROM %i WHERE $where", $table, ...$params);
-    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-    
     return $wpdb->get_var($sql);
-    // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+    // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 }
-
 
 add_action('wp_ajax_alphaform_get_forms_list', 'alphaform_get_forms_list');
 
@@ -393,13 +393,18 @@ function alphaform_get_forms_list()
     $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Busca os formulários distintos com título
-    $results = $wpdb->get_results("
-        SELECT DISTINCT widget_id, form_id 
-        FROM $table 
-        WHERE widget_id IS NOT NULL AND widget_id != ''
-        ORDER BY submitted_at DESC
-        LIMIT 100
-    ");
+    $results = $wpdb->get_results(
+        $wpdb->prepare(
+            "
+            SELECT DISTINCT widget_id, form_id
+            FROM %i
+            WHERE widget_id IS NOT NULL AND widget_id != ''
+            ORDER BY submitted_at DESC
+            LIMIT 100
+            ",
+            $table
+        )
+    );
 
     $data = [];
 

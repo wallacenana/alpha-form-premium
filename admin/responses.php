@@ -18,32 +18,94 @@ $widget_id = isset($_GET['widget_id']) ? sanitize_text_field(wp_unslash($_GET['w
 
 // Tabela personalizada
 global $wpdb;
-$table = $wpdb->prefix . 'alpha_form_responses';
 
-$where = '';
+$table = $wpdb->prefix . 'alpha_form_responses';
 $params = [];
 
-if ($widget_id) {
-    $where = 'WHERE widget_id = %s';
-    $params[] = $widget_id;
+$cache_key_total = 'alpha_form_total_' . ($widget_id ? $widget_id : 'all');
+
+$total = wp_cache_get($cache_key_total, 'alpha_form');
+
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery	
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching	
+if (false === $total) {
+    if ($widget_id) {
+        $total = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+                SELECT COUNT(*)
+                FROM %i
+                WHERE widget_id = %s
+                ",
+                $table,
+                $widget_id
+            )
+        );
+    } else {
+        $total = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+                SELECT COUNT(*)
+                FROM %i
+                ",
+                $table
+            )
+        );
+    }
+
+    if (!is_null($total)) {
+        wp_cache_set($cache_key_total, $total, 'alpha_form', 600);
+    }
 }
 
-// Total de registros
-$total = $widget_id
-    ?
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table WHERE widget_id = %s", $widget_id))
-    :
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    $wpdb->get_var("SELECT COUNT(*) FROM $table");
-
-// Resultados com paginação
-$sql = "SELECT id, form_id, session_id, postId, widget_id, submitted_at FROM $table $where ORDER BY submitted_at DESC LIMIT %d OFFSET %d";
+// Paginação
 $params[] = $per_page;
 $params[] = $offset;
-// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-$results = $wpdb->get_results($wpdb->prepare($sql, ...$params));
 
+$cache_key_results = 'alpha_form_results_' . ($widget_id ? $widget_id : 'all') . "_page_$current_page";
+
+$results = wp_cache_get($cache_key_results, 'alpha_form');
+
+// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+if (false === $results) {
+    if ($widget_id) {
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "
+                SELECT id, form_id, session_id, postId, widget_id, submitted_at
+                FROM %i
+                WHERE widget_id = %s
+                ORDER BY submitted_at DESC
+                LIMIT %d OFFSET %d
+                ",
+                $table,
+                $widget_id,
+                ...$params
+            )
+        );
+    } else {
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "
+                SELECT id, form_id, session_id, postId, widget_id, submitted_at
+                FROM %i
+                ORDER BY submitted_at DESC
+                LIMIT %d OFFSET %d
+                ",
+                $table,
+                ...$params
+            )
+        );
+    }
+
+    if (!empty($results)) {
+        wp_cache_set($cache_key_results, $results, 'alpha_form', 300);
+    }
+}
+
+// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery	
+// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching	
 // Renderização
 ?>
 <div class="wrap alpha-form-wrap">

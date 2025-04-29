@@ -32,28 +32,55 @@ function alpha_form_save_response()
     $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Verifica se já existe registro para essa sessão + formulário
-    $existing = $wpdb->get_var($wpdb->prepare(
-        "SELECT id FROM %i WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
-        $table,
-        $form_id,
-        $session_id,
-        $widget_id,
-        $postId
-    ));
+    $cache_key_existing = 'alpha_form_existing_' . md5(implode('_', [$form_id, $session_id, $widget_id, $postId]));
+
+    $existing = wp_cache_get($cache_key_existing, 'alpha_form');
+
+    if (false === $existing) {
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $existing = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM %i WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
+                $table,
+                $form_id,
+                $session_id,
+                $widget_id,
+                $postId
+            )
+        );
+
+        if (!is_null($existing)) {
+            wp_cache_set($cache_key_existing, $existing, 'alpha_form', 300); // cache de 5 minutos
+        }
+    }
 
     if ($existing) {
         // Atualiza o JSON existente
-        $existing_json = $wpdb->get_var($wpdb->prepare(
-            "SELECT data FROM %i WHERE id = %d",
-            $table,
-            $existing
-        ));
+        $cache_key_existing_json = 'alpha_form_existing_json_' . (int) $existing;
+
+        $existing_json = wp_cache_get($cache_key_existing_json, 'alpha_form');
+
+        if (false === $existing_json) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+            $existing_json = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT data FROM %i WHERE id = %d",
+                    $table,
+                    $existing
+                )
+            );
+
+            if (!is_null($existing_json)) {
+                wp_cache_set($cache_key_existing_json, $existing_json, 'alpha_form', 300); // cache de 5 minutos
+            }
+        }
 
         $existing_data = json_decode($existing_json, true) ?? [];
 
         // Mescla nova resposta ao JSON existente
         $merged_data = array_merge($existing_data, $response);
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $updated = $wpdb->update(
             $table,
             [
@@ -62,9 +89,10 @@ function alpha_form_save_response()
                 'start_form' => 1
             ],
             ['id' => $existing],
-            ['%s', '%s'],
+            ['%s', '%s', '%d'], // Aqui estava errado! precisa de 3 formatos!
             ['%d']
         );
+
 
         if ($updated === false) {
             wp_send_json_error(['message' => 'Erro ao atualizar a submissão.']);
@@ -73,26 +101,51 @@ function alpha_form_save_response()
         wp_send_json_success(['message' => 'Resposta atualizada com sucesso.']);
     } else {
         // Insere nova linha com a primeira resposta
-        $inserted = $wpdb->insert($table, [
-            'form_id'      => $form_id,
-            'session_id'   => $session_id,
-            'widget_id'    => $widget_id,
-            'postId'       => $postId,
-            'data'         => wp_json_encode($response),
-            'submitted_at' => current_time('mysql'),
-            'created_at'   => current_time('mysql'),
-            'duration'     => $duration,
-            'lang'         => $lang,
-            'platform'     => $platform,
-            'device_type'  => $device_type,
-            'timezone'     => $timezone,
-            'user_agent'   => $user_agent,
-            'ip_address'   => $ip_address,
-            'latitude'     => $geo_lat,
-            'longitude'    => $geo_lng,
-            'browser'      => $browser,
-            'page_view'    => 1,
-        ]);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $inserted = $wpdb->insert(
+            $table,
+            [
+                'form_id'      => $form_id,
+                'session_id'   => $session_id,
+                'widget_id'    => $widget_id,
+                'postId'       => $postId,
+                'data'         => wp_json_encode($response),
+                'submitted_at' => current_time('mysql'),
+                'created_at'   => current_time('mysql'),
+                'duration'     => $duration,
+                'lang'         => $lang,
+                'platform'     => $platform,
+                'device_type'  => $device_type,
+                'timezone'     => $timezone,
+                'user_agent'   => $user_agent,
+                'ip_address'   => $ip_address,
+                'latitude'     => $geo_lat,
+                'longitude'    => $geo_lng,
+                'browser'      => $browser,
+                'page_view'    => 1,
+            ],
+            [
+                '%s', // form_id
+                '%s', // session_id
+                '%s', // widget_id
+                '%d', // postId
+                '%s', // data
+                '%s', // submitted_at
+                '%s', // created_at
+                '%d', // duration
+                '%s', // lang
+                '%s', // platform
+                '%s', // device_type
+                '%s', // timezone
+                '%s', // user_agent
+                '%s', // ip_address
+                '%s', // latitude
+                '%s', // longitude
+                '%s', // browser
+                '%d', // page_view
+            ]
+        );
+
 
         if ($inserted === false) {
             wp_send_json_error(['message' => 'Erro ao salvar nova submissão.', 'sql' => $wpdb->last_error]);
@@ -101,53 +154,6 @@ function alpha_form_save_response()
         wp_send_json_success(['message' => 'Resposta salva com sucesso.']);
     }
 }
-
-
-add_action('wp_ajax_alphaform_get_stats_overview', 'alphaform_get_stats_overview');
-function alphaform_get_stats_overview()
-{
-    check_ajax_referer('alpha_form_nonce', 'nonce');
-
-    global $wpdb;
-    $table = $wpdb->prefix . 'alpha_form_responses';
-
-    $hoje = gmdate('Y-m-d');
-    $semana = gmdate('Y-m-d', strtotime('-7 days'));
-    $mes = gmdate('Y-m-d', strtotime('-30 days'));
-
-
-    $results = [];
-
-    // Total hoje
-    $results['today'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) = %s",
-        $table,
-        $hoje
-    ));
-
-    // Total semana
-    $results['week'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) >= %s",
-        $table,
-        $semana
-    ));
-
-    // Total mês
-    $results['month'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM %i WHERE DATE(submitted_at) >= %s",
-        $table,
-        $mes
-    ));
-
-    // Sessões únicas (visitas)
-    $results['visits'] = (int) $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(DISTINCT session_id) FROM %i",
-        $table
-    ));
-
-    wp_send_json_success($results);
-}
-
 
 
 add_action('wp_ajax_alpha_form_save_geo', 'alpha_form_save_geo_callback');
@@ -189,6 +195,7 @@ function alpha_form_save_geo_callback()
     $table = $wpdb->prefix . 'alpha_form_responses';
 
     // Sempre faz UPDATE
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $result = $wpdb->update(
         $table,
         [
@@ -199,7 +206,7 @@ function alpha_form_save_geo_callback()
             'country' => $country,
             'country_code' => $country_code,
         ],
-        ['session_id' => $session_id], // condição WHERE
+        ['session_id' => $session_id],
         [
             '%f',
             '%f',
@@ -208,7 +215,7 @@ function alpha_form_save_geo_callback()
             '%s',
             '%s'
         ],
-        ['%s'] // tipo do WHERE (session_id)
+        ['%s']
     );
 
     if ($result === false) {
