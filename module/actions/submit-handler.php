@@ -9,7 +9,7 @@ function alphaform_get_widget_actions()
     check_ajax_referer('alpha_form_nonce', 'nonce');
 
     $post_id = intval($_POST['post_id'] ?? 0);
-    $widget_id = sanitize_text_field($_POST['widget_id'] ?? '');
+    $widget_id = isset($_POST['widget_id']) ? sanitize_text_field(wp_unslash($_POST['widget_id'])) : '';
 
     if (!$post_id || !$widget_id) {
         wp_send_json_error('ID do post ou widget ausente');
@@ -64,7 +64,7 @@ function alphaform_send_integrations_handler()
 
     global $wpdb;
 
-    $actions = isset($_POST['actions']) ? json_decode(stripslashes($_POST['actions']), true) : [];
+    $actions = isset($_POST['actions']) ? json_decode(sanitize_textarea_field(wp_unslash($_POST['actions'])), true) : [];
 
     if (!is_array($actions)) {
         wp_send_json_error('Ações inválidas.');
@@ -117,9 +117,12 @@ function alphaform_send_integrations_handler()
                 ? array_map('sanitize_text_field', $value)
                 : sanitize_text_field($value);
         }
-        error_log(json_encode($form_data_hook, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        // error_log(json_encode($form_data_hook, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/webhook.php';
-        $ok = alphaform_send_to_webhook($form_data_hook, $_POST['webhook_url'] ?? '');
+        $ok = alphaform_send_to_webhook(
+            $form_data_hook,
+            isset($_POST['webhook_url']) ? sanitize_text_field(wp_unslash($_POST['webhook_url'])) : ''
+        );
         if (!$ok) wp_send_json_error('Erro no envio para o Webhook.');
     }
 
