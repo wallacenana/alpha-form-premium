@@ -257,7 +257,15 @@ add_action('admin_menu', function () {
         'manage_options',
         'alpha-form-integration',
         function () {
-            $service = isset($_GET['service']) ? sanitize_text_field($_GET['service']) : '';
+            if (
+                !isset($_GET['_alpha_form_nonce']) ||
+                !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_alpha_form_nonce'])), 'alpha_form_settings_action')
+            ) {
+                wp_die('Acesso negado (nonce inválido).');
+            }
+
+
+            $service = isset($_GET['service']) ? sanitize_text_field(wp_unslash($_GET['service'])) : '';
             $file = plugin_dir_path(__FILE__) . "integrations/{$service}.php";
 
             if (file_exists($file)) {
@@ -268,6 +276,7 @@ add_action('admin_menu', function () {
         }
     );
 });
+
 
 add_action('admin_menu', function () {
     add_submenu_page(
@@ -291,10 +300,11 @@ add_action('wp_ajax_alpha_form_save_license_data', function () {
 
     check_ajax_referer('alpha_form_save_license', 'nonce');
 
-    $license = sanitize_text_field($_POST['license'] ?? '');
-    $status = sanitize_text_field($_POST['status'] ?? 'invalid');
-    $expires = sanitize_text_field($_POST['expires'] ?? '');
-    $domain = sanitize_text_field($_POST['domain'] ?? '');
+    $license = isset($_POST['license']) ? sanitize_text_field(wp_unslash($_POST['license'])) : '';
+    $status  = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : 'invalid';
+    $expires = isset($_POST['expires']) ? sanitize_text_field(wp_unslash($_POST['expires'])) : '';
+    $domain  = isset($_POST['domain']) ? sanitize_text_field(wp_unslash($_POST['domain'])) : '';
+
 
     update_option('alpha_form_license_key', $license);
     update_option('alpha_form_license_status', $status);

@@ -54,6 +54,7 @@ function render_alpha_form_fields($settings, $widget_id)
                 case 'select':
                     echo '<div class="alpha-form-input select">';
                     echo '<select id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" class="' . esc_attr($class) . '" ' . esc_attr($required) . '>';
+                    echo '<option value="" disabled selected hidden>Selecione uma opção</option>';
                     $options = explode("\n", $field['field_options'] ?? '');
                     foreach ($options as $opt) {
                         $opt = trim($opt);

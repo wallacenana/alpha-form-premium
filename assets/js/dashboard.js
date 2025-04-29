@@ -407,20 +407,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Data range (padrão ou customizado)
-    select.addEventListener('change', function () {
-        const valor = this.value;
-        customFields.style.display = valor === 'custom' ? 'block' : 'none';
+    if (select) {
+        select.addEventListener('change', function () {
+            const valor = this.value;
+            customFields.style.display = valor === 'custom' ? 'block' : 'none';
 
-        if (valor !== 'custom') {
-            const dias = parseInt(valor, 10);
-            const hoje = new Date();
-            const inicio = new Date();
-            inicio.setDate(hoje.getDate() - dias);
+            if (valor !== 'custom') {
+                const dias = parseInt(valor, 10);
+                const hoje = new Date();
+                const inicio = new Date();
+                inicio.setDate(hoje.getDate() - dias);
 
-            updateDashboard(inicio.toISOString().slice(0, 10), hoje.toISOString().slice(0, 10), selectedForms);
-        }
-    });
-
+                updateDashboard(inicio.toISOString().slice(0, 10), hoje.toISOString().slice(0, 10), selectedForms);
+            }
+        });
+    }
+    else
+        return
     btnApply.addEventListener('click', function () {
         const inicio = document.getElementById('dateStart').value;
         const fim = document.getElementById('dateEnd').value;
