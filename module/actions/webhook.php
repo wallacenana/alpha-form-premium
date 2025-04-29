@@ -5,7 +5,7 @@ function alphaform_send_to_webhook($dados, $url)
 {
     // error_log(json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     if (empty($url)) {
-        error_log('[AlphaForm] Webhook - URL não fornecida.');
+        // error_log('[AlphaForm] Webhook - URL não fornecida.');
         return false;
     }
 
@@ -18,18 +18,18 @@ function alphaform_send_to_webhook($dados, $url)
         ]);
 
         if (is_wp_error($response)) {
-            error_log('[AlphaForm] Webhook - Erro WP: ' . $response->get_error_message());
+            // error_log('[AlphaForm] Webhook - Erro WP: ' . $response->get_error_message());
             return false;
         }
 
         if (wp_remote_retrieve_response_code($response) >= 400) {
-            error_log('[AlphaForm] Webhook - Erro HTTP: ' . wp_remote_retrieve_response_message($response));
+            // error_log('[AlphaForm] Webhook - Erro HTTP: ' . wp_remote_retrieve_response_message($response));
             return false;
         }
 
         return true;
     } catch (Exception $e) {
-        error_log('[AlphaForm] Webhook - Exceção: ' . $e->getMessage());
+        // error_log('[AlphaForm] Webhook - Exceção: ' . $e->getMessage());
         return false;
     }
 }
