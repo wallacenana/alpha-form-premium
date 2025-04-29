@@ -14,7 +14,7 @@ function alpha_form_save_integration($type, $settings, $status = 1)
     $table = $wpdb->prefix . 'alpha_form_integrations';
 
     $encoded = wp_json_encode($settings);
-    $existing = $wpdb->get_var($wpdb->prepare("SELECT id FROM $table WHERE type = %s LIMIT 1", $type));
+    $existing = $wpdb->get_var($wpdb->prepare("SELECT id FROM %i WHERE type = %s LIMIT 1", $table, $type));
 
     if ($existing) {
         $wpdb->update($table, [
@@ -47,7 +47,7 @@ function alpha_form_get_integration($type)
 {
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_integrations';
-    $json = $wpdb->get_var($wpdb->prepare("SELECT settings FROM $table WHERE type = %s LIMIT 1", $type));
+    $json = $wpdb->get_var($wpdb->prepare("SELECT settings FROM %i WHERE type = %s LIMIT 1", $table, $type));
     return json_decode($json, true) ?? [];
 }
 
@@ -60,7 +60,7 @@ function alpha_form_get_available_integrations()
 {
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_integrations';
-    $rows = $wpdb->get_results("SELECT type, settings FROM $table WHERE status = 1", ARRAY_A);
+    $rows = $wpdb->get_results($wpdb->prepare("SELECT type, settings FROM %i WHERE status = 1", $table), ARRAY_A);
 
     $output = [];
     foreach ($rows as $row) {
@@ -166,7 +166,8 @@ function alpha_form_get_list_fields($slug, $list_id)
 /**
  * Shortcodes disponíveis para mapeamento de campos.
  */
-function alpha_form_get_available_fields_from_widget_array($fields) {
+function alpha_form_get_available_fields_from_widget_array($fields)
+{
     $options = [];
 
     if (!is_array($fields)) {
@@ -185,7 +186,8 @@ function alpha_form_get_available_fields_from_widget_array($fields) {
 }
 
 
-function alpha_form_get_remote_fields_activecampaign() {
+function alpha_form_get_remote_fields_activecampaign()
+{
     $data = alpha_form_get_integration('activecampaign');
     if (empty($data['api_key']) || empty($data['api_url'])) {
         return [];

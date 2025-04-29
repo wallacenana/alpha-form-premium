@@ -10,7 +10,7 @@ function alphaform_send_to_activecampaign($form_data)
     $api_url = rtrim(get_option('alpha_form_activecampaign_api_url'), '/') . '/';
 
     if (!$api_key || !$api_url) {
-        error_log('[AlphaForm] ActiveCampaign - Dados de API ausentes.');
+        // error_log('[AlphaForm] ActiveCampaign - Dados de API ausentes.');
         return false;
     }
 
@@ -23,11 +23,10 @@ function alphaform_send_to_activecampaign($form_data)
     $list_id = $form_data['listaId'] ?? null;
 
     if (empty($email)) {
-        error_log('[AlphaForm] ActiveCampaign - Email ausente nos dados enviados.');
+        // error_log('[AlphaForm] ActiveCampaign - Email ausente nos dados enviados.');
         return false;
     }
 
-    error_log($email);
     $client = new Client();
 
     try {
@@ -53,7 +52,7 @@ function alphaform_send_to_activecampaign($form_data)
         $contact_id = $result['contact']['id'] ?? null;
 
         if (!$contact_id) {
-            error_log('[AlphaForm] ActiveCampaign - Falha ao obter ID do contato.');
+            // error_log('[AlphaForm] ActiveCampaign - Falha ao obter ID do contato.');
             return false;
         }
 
@@ -77,7 +76,7 @@ function alphaform_send_to_activecampaign($form_data)
 
         return true;
     } catch (\Exception $e) {
-        error_log('[AlphaForm] ActiveCampaign - Erro: ' . $e->getMessage());
+        // error_log('[AlphaForm] ActiveCampaign - Erro: ' . $e->getMessage());
         return false;
     }
 }
