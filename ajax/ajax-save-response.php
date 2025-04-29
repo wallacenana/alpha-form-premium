@@ -37,11 +37,10 @@ function alpha_form_save_response()
     $existing = wp_cache_get($cache_key_existing, 'alpha_form');
 
     if (false === $existing) {
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
         $existing = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT id FROM %i WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
-                $table,
+                "SELECT id FROM $table WHERE form_id = %s AND session_id = %s AND widget_id = %s AND postId = %d",
                 $form_id,
                 $session_id,
                 $widget_id,
@@ -61,11 +60,9 @@ function alpha_form_save_response()
         $existing_json = wp_cache_get($cache_key_existing_json, 'alpha_form');
 
         if (false === $existing_json) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
             $existing_json = $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT data FROM %i WHERE id = %d",
-                    $table,
+                    "SELECT data FROM $table WHERE id = %d",
                     $existing
                 )
             );
@@ -76,6 +73,7 @@ function alpha_form_save_response()
         }
 
         $existing_data = json_decode($existing_json, true) ?? [];
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
 
         // Mescla nova resposta ao JSON existente
         $merged_data = array_merge($existing_data, $response);

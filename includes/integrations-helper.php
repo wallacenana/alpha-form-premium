@@ -15,17 +15,15 @@ function alpha_form_save_integration($type, $settings, $status = 1)
 
     $encoded = wp_json_encode($settings);
 
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, 	WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $existing = $wpdb->get_var(
         $wpdb->prepare(
-            "SELECT id FROM %i WHERE type = %s LIMIT 1",
-            $table,
+            "SELECT id FROM $table WHERE type = %s LIMIT 1",
             $type
         )
     );
 
     if ($existing) {
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->update(
             $table,
             [
@@ -38,7 +36,6 @@ function alpha_form_save_integration($type, $settings, $status = 1)
             ['%d']
         );
     } else {
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->insert(
             $table,
             [
@@ -55,6 +52,7 @@ function alpha_form_save_integration($type, $settings, $status = 1)
     foreach ($settings as $key => $value) {
         update_option("alpha_form_{$type}_{$key}", $value);
     }
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, 	WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 
@@ -69,14 +67,14 @@ function alpha_form_get_integration($type)
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_integrations';
 
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $json = $wpdb->get_var(
         $wpdb->prepare(
-            "SELECT settings FROM %i WHERE type = %s LIMIT 1",
-            $table,
+            "SELECT settings FROM $table WHERE type = %s LIMIT 1",
             $type
         )
     );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     return json_decode($json, true) ?? [];
 }
 
@@ -89,15 +87,14 @@ function alpha_form_get_available_integrations()
 {
     global $wpdb;
     $table = $wpdb->prefix . 'alpha_form_integrations';
-    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $rows = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT type, settings FROM %i WHERE status = 1",
-            $table
+            "SELECT type, settings FROM $table WHERE status = 1",
         ),
         ARRAY_A
     );
-
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $output = [];
     foreach ($rows as $row) {
         $type = $row['type'];

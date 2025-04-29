@@ -12,15 +12,15 @@ function alpha_form_get_widget_totals()
     $results = wp_cache_get($cache_key, $cache_group);
 
     if (false === $results) {
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
         $results = $wpdb->get_results($wpdb->prepare(
             "
             SELECT widget_id, MAX(form_id) AS form_id, COUNT(*) AS total, MAX(postId) AS postId
-            FROM %i
+            FROM $table
             GROUP BY widget_id
-            ",
-            $table
+            "
         ), ARRAY_A);
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 
         if (!empty($results)) {
             wp_cache_set($cache_key, $results, $cache_group, 300);

@@ -77,12 +77,16 @@ function alphaform_send_integrations_handler()
     }
 
     if (!empty($_POST['is_final_submission'])) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->update(
             "{$wpdb->prefix}alpha_form_responses",
             ['concluido' => 1],
-            ['session_id' => sanitize_text_field($form_data['session_id'])]
+            ['session_id' => sanitize_text_field($form_data['session_id'])],
+            ['%d'],
+            ['%s']
         );
     }
+
 
     // ActiveCampaign
     if (in_array('integration_activecampaign', $actions)) {

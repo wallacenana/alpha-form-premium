@@ -157,9 +157,9 @@ function alpha_form_admin_assets($hook)
 
     wp_enqueue_script(
         'chartjs',
-        'https://cdn.jsdelivr.net/npm/chart.js',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/vendor/chart.js',
         [],
-        '4.4.0', // 👈 define manualmente a versão da CDN
+        '4.4.0',
         true
     );
 
@@ -183,14 +183,14 @@ function alpha_form_enqueue_select2()
 {
     wp_enqueue_style(
         'select2-css',
-        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+        ALPHA_FORM_PLUGIN_URL . 'assets/css/select2.min.css',
         [],
         '4.1.0-rc.0' // 👈 coloca a versão
     );
 
     wp_enqueue_script(
         'select2-js',
-        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/vendor/select2.min.js',
         ['jquery'],
         '4.1.0-rc.0',
         true // 👈 e define para rodapé

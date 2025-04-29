@@ -26,18 +26,17 @@ $cache_key_total = 'alpha_form_total_' . ($widget_id ? $widget_id : 'all');
 
 $total = wp_cache_get($cache_key_total, 'alpha_form');
 
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery	
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching	
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber	
+
 if (false === $total) {
     if ($widget_id) {
         $total = $wpdb->get_var(
             $wpdb->prepare(
                 "
                 SELECT COUNT(*)
-                FROM %i
+                FROM $table
                 WHERE widget_id = %s
                 ",
-                $table,
                 $widget_id
             )
         );
@@ -46,9 +45,8 @@ if (false === $total) {
             $wpdb->prepare(
                 "
                 SELECT COUNT(*)
-                FROM %i
-                ",
-                $table
+                FROM $table
+                "
             )
         );
     }
@@ -66,19 +64,17 @@ $cache_key_results = 'alpha_form_results_' . ($widget_id ? $widget_id : 'all') .
 
 $results = wp_cache_get($cache_key_results, 'alpha_form');
 
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 if (false === $results) {
     if ($widget_id) {
         $results = $wpdb->get_results(
             $wpdb->prepare(
                 "
                 SELECT id, form_id, session_id, postId, widget_id, submitted_at
-                FROM %i
+                FROM $table
                 WHERE widget_id = %s
                 ORDER BY submitted_at DESC
                 LIMIT %d OFFSET %d
                 ",
-                $table,
                 $widget_id,
                 ...$params
             )
@@ -88,11 +84,10 @@ if (false === $results) {
             $wpdb->prepare(
                 "
                 SELECT id, form_id, session_id, postId, widget_id, submitted_at
-                FROM %i
+                FROM $table
                 ORDER BY submitted_at DESC
                 LIMIT %d OFFSET %d
                 ",
-                $table,
                 ...$params
             )
         );
@@ -103,9 +98,8 @@ if (false === $results) {
     }
 }
 
-// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery	
-// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching	
+// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber	
+
 // Renderização
 ?>
 <div class="wrap alpha-form-wrap">

@@ -26,15 +26,14 @@ $cache_key = 'alpha_form_response_' . (int) $response_id;
 $response = wp_cache_get($cache_key, 'alpha_form');
 
 if (false === $response) {
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
     $response = $wpdb->get_row(
         $wpdb->prepare(
-            "SELECT * FROM %i WHERE id = %d",
-            $table,
+            "SELECT * FROM $table WHERE id = %d",
             $response_id
         )
     );
-    // phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
 
     if (!is_null($response)) {
         wp_cache_set($cache_key, $response, 'alpha_form', 600);

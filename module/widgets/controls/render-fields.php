@@ -211,7 +211,7 @@ function render_alpha_form_fields($settings, $widget_id)
         echo '</div>';
     }
 
-
+    // phpcs:disable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
     echo '</div>'; // .alpha-form-progress
     echo '</form>';
     echo '</div>'; // .alpha-form-wrapper
@@ -220,6 +220,7 @@ function render_alpha_form_fields($settings, $widget_id)
                 <img src="' . esc_url(ALPHA_FORM_PLUGIN_URL . 'assets/img/alphaform-loader-bcb992ad.gif') . '" alt="Carregando..." width="30">
                 </div>
             </div>';
+    // phpcs:enable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
 
     if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
         echo '<style>.alpha-form-field { opacity: 1 !important; visibility: visible !important; margin-bottom: 20px!important; position: relative !important; transform: none !important; height: auto!important; margin-bottom: 50px !important }</style>';

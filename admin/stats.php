@@ -3,11 +3,14 @@ if (!defined('ABSPATH')) exit;
 
 function alpha_form_plugin_image($path, $alt = '')
 {
+    // phpcs:disable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
     printf(
         '<img src="%s" alt="%s" loading="lazy" decoding="async" />',
         esc_url(ALPHA_FORM_PLUGIN_URL . ltrim($path, '/')),
         esc_attr($alt)
     );
+    // phpcs:enable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+
 }
 
 ?>
