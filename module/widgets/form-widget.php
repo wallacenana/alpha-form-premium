@@ -56,7 +56,7 @@ class Form_Widget extends Widget_Base
 
     public function get_categories()
     {
-        return ['general'];
+        return ['alpha-form-category'];
     }
 
 
