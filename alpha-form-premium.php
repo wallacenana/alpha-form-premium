@@ -4,7 +4,7 @@
  * Plugin Name: Alpha Form Premium - Addon for Elementor
  * Plugin URI: https://alphaform.com.br
  * Description: Formulário estilo Premium integrado ao Elementor
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Wallace Tavares
  * Author URI: https://wallacetavares.com
  * License: GPLv2 or later
@@ -82,7 +82,7 @@ function alpha_form_add_user_dashboard_menu()
     );
 
     add_submenu_page(
-        'alpha-form-dashboard', 
+        null, 
         'Visualizar Resposta',
         '',
         'manage_options',
@@ -94,7 +94,7 @@ function alpha_form_add_user_dashboard_menu()
 
 
     add_submenu_page(
-        'alpha-form-dashboard',
+        null,
         'Respostas',
         '',
         'read',
