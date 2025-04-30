@@ -43,7 +43,7 @@ function render_alpha_form_fields($settings, $widget_id)
             }
 
             switch ($type) {
-                case 'intro':
+                case 'textarea':
                     echo '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" data-shortcode="' .
                         esc_attr($shortcode) . '" class="alpha-form-input ' . esc_attr($class) . '" placeholder="' .
                         esc_attr($placeholder) . '" ' . esc_attr($required) . ' autofocus rows="5">';
