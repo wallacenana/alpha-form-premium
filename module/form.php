@@ -11,7 +11,19 @@ class Form
     public function init()
     {
         // Registra o widget no Elementor
-        add_action('elementor/widgets/register', [$this, 'register_widgets']);
+        add_action('elementor/widgets/widgets_registered', [$this, 'register_widgets']);
+    }
+
+    
+    public function register_categories($elements_manager)
+    {
+        $elements_manager->add_category(
+            'alpha-form-category',
+            [
+                'title' => esc_html__('Alpha Form', 'alpha-form-premium'),
+                'icon'  => 'fa fa-plug',
+            ]
+        );
     }
 
     public function register_widgets($widgets_manager)
@@ -22,5 +34,4 @@ class Form
             $widgets_manager->register(new Form_Widget());
         }
     }
-
 }

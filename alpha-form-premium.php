@@ -4,7 +4,7 @@
  * Plugin Name: Alpha Form Premium - Addon for Elementor
  * Plugin URI: https://alphaform.com.br
  * Description: Formulário estilo Premium integrado ao Elementor
- * Version: 1.0.3
+ * Version: 1.0.0
  * Author: Wallace Tavares
  * Author URI: https://wallacetavares.com
  * License: GPLv2 or later
@@ -24,6 +24,18 @@ require_once ALPHA_FORM_PLUGIN_PATH . 'includes/line-helped.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'ajax/ajax-hooks.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'ajax/end-point-dashboard.php';
 require_once ALPHA_FORM_PLUGIN_PATH . 'module/actions/submit-handler.php';
+
+// =====================================================
+// INICIALIZA FORMULÁRIO DO ELEMENTOR
+// =====================================================
+
+add_action('plugins_loaded', function () {
+    if (!defined('ELEMENTOR_VERSION')) return;
+    require_once ALPHA_FORM_PLUGIN_PATH . 'module/form.php';
+    if (class_exists('AlphaFormPremium\\Module\\Form')) {
+        (new \AlphaFormPremium\Module\Form())->init();
+    }
+});
 
 // =====================================================
 // ADMIN MENU
@@ -70,7 +82,7 @@ function alpha_form_add_user_dashboard_menu()
     );
 
     add_submenu_page(
-        'alpha-form-dashboard',
+        'alpha-form-dashboard', 
         'Visualizar Resposta',
         '',
         'manage_options',
@@ -204,80 +216,51 @@ add_filter('pre_set_site_transient_update_plugins', function ($transient) {
 
     return $transient;
 });
+
 // =====================================================
-// INICIALIZA FORMULÁRIO DO ELEMENTOR
+// ENQUEUE ASSETS FRONT E ADMIN
 // =====================================================
-
-add_action('plugins_loaded', function () {
-    if (!defined('ELEMENTOR_VERSION')) return;
-    require_once ALPHA_FORM_PLUGIN_PATH . 'module/form.php';
-    if (class_exists('AlphaFormPremium\\Module\\Form')) {
-        (new \AlphaFormPremium\Module\Form())->init();
-    }
-
-    // =====================================================
-    // ENQUEUE ASSETS FRONT E ADMIN
-    // =====================================================
-    function alpha_form_admin_assets($hook)
-    {
-        if (strpos($hook, 'alpha-form-') === false) return;
-
-        wp_enqueue_style(
-            'alpha-form-admin-style',
-            ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css',
-            [],
-            filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css')
-        );
-
-        wp_enqueue_script(
-            'alpha-form-dashboard-script',
-            ALPHA_FORM_PLUGIN_URL . 'assets/js/dashboard.js',
-            ['jquery'],
-            filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/dashboard.js'),
-            true
-        );
-
-        wp_enqueue_script(
-            'chartjs',
-            ALPHA_FORM_PLUGIN_URL . 'assets/js/vendor/chart.js',
-            [],
-            '4.4.0',
-            true
-        );
-
-        wp_localize_script('alpha-form-dashboard-script', 'alpha_form_nonce', [
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('alpha_form_nonce'),
-            'plugin_url' => ALPHA_FORM_PLUGIN_URL,
-            'assetsUrl' => ALPHA_FORM_PLUGIN_URL . 'assets/img/',
-        ]);
-
-        wp_enqueue_script(
-            'alpha-form-admin-script',
-            ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js',
-            [],
-            filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'),
-            true
-        );
-    }
-
-
-    add_action('admin_enqueue_scripts', 'alpha_form_admin_assets');
-
-
-    add_action('wp_enqueue_scripts', 'alpha_form_enqueue_front_assets');
-});
-
-function alpha_form_enqueue_front_assets()
+function alpha_form_admin_assets($hook)
 {
-    wp_enqueue_style('alpha-form-frontend-style', ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css'));
+    if (strpos($hook, 'alpha-form-') === false) return;
 
-    wp_enqueue_script('alpha-form-js', ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js', ['jquery'], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'), true);
+    wp_enqueue_style(
+        'alpha-form-admin-style',
+        ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css',
+        [],
+        filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css')
+    );
 
-    wp_localize_script('alpha-form-js', 'alphaFormVars', [
+    wp_enqueue_script(
+        'alpha-form-dashboard-script',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/dashboard.js',
+        ['jquery'],
+        filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/dashboard.js'),
+        true
+    );
+
+    wp_enqueue_script(
+        'chartjs',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/vendor/chart.js',
+        [],
+        '4.4.0',
+        true
+    );
+
+    wp_localize_script('alpha-form-dashboard-script', 'alpha_form_nonce', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('alpha_form_nonce')
+        'nonce' => wp_create_nonce('alpha_form_nonce'),
+        'plugin_url' => ALPHA_FORM_PLUGIN_URL,
+        'assetsUrl' => ALPHA_FORM_PLUGIN_URL . 'assets/img/',
     ]);
+
+    wp_enqueue_script(
+        'alpha-form-admin-script',
+        ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js',
+        [],
+        filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'),
+        true
+    );
 }
 
 function alpha_form_enqueue_select2()
@@ -297,3 +280,21 @@ function alpha_form_enqueue_select2()
         true // 👈 e define para rodapé
     );
 }
+add_action('admin_enqueue_scripts', 'alpha_form_admin_assets');
+
+function alpha_form_enqueue_front_assets()
+{
+    wp_enqueue_style('alpha-form-frontend-style', ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css'));
+
+    wp_enqueue_script('alpha-form-js', ALPHA_FORM_PLUGIN_URL . 'assets/js/alpha-form.js', ['jquery'], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/js/alpha-form.js'), true);
+
+    wp_localize_script('alpha-form-js', 'alphaFormVars', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('alpha_form_nonce')
+    ]);
+}
+add_action('wp_enqueue_scripts', 'alpha_form_enqueue_front_assets');
+
+add_action('elementor/preview/enqueue_styles', function () {
+    wp_enqueue_style('alpha-form-style-preview', ALPHA_FORM_PLUGIN_URL . 'assets/css/alpha-form-style.css', [], filemtime(ALPHA_FORM_PLUGIN_PATH . 'assets/css/alpha-form-style.css'));
+});
