@@ -1,5 +1,4 @@
 # Ignorar arquivos desnecessários
-/vendor/
 node_modules/
 *.log
 *.zip
