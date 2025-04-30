@@ -198,7 +198,7 @@ add_filter('pre_set_site_transient_update_plugins', function ($transient) {
     $plugin_slug     = 'alpha-form-premium-main/alpha-form-premium.php'; // 👈 agora é com -main
     $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin_slug);
     $current_version = isset($plugin_data['Version']) ? $plugin_data['Version'] : '0.0.0';
-    $update_url      = 'https://alphaform.com.br/wp-content/plugins/alpha-form-admin/update/update-check.php';
+    $update_url      = 'https://alphaform.com.br/update/update-check.php';
 
     $response = wp_remote_get($update_url);
     if (is_wp_error($response)) return $transient;
