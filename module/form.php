@@ -20,7 +20,7 @@ class Form
         $elements_manager->add_category(
             'alpha-form-category',
             [
-                'title' => esc_html__('Alpha Form', 'alpha-form-premium'),
+                'title' => esc_html__('Alpha Form', 'alpha-form-premium-main'),
                 'icon'  => 'fa fa-plug',
             ]
         );

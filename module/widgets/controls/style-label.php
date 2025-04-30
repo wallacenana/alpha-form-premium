@@ -16,22 +16,22 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'style_label_section',
         [
-            'label' => __('Checks Label', 'alpha-form-premium'),
+            'label' => __('Checks Label', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
     $widget->add_responsive_control(
         'direcao',
         [
-            'label' => esc_html__('Direção', 'alpha-form-premium'),
+            'label' => esc_html__('Direção', 'alpha-form-premium-main'),
             'type' => Controls_Manager::CHOOSE,
             'options' => [
                 'column' => [
-                    'title' => esc_html__('Hosizontal', 'alpha-form-premium'),
+                    'title' => esc_html__('Hosizontal', 'alpha-form-premium-main'),
                     'icon' => 'eicon-editor-list-ul',
                 ],
                 'row' => [
-                    'title' => esc_html__('Vertical', 'alpha-form-premium'),
+                    'title' => esc_html__('Vertical', 'alpha-form-premium-main'),
                     'icon' => 'eicon-ellipsis-h',
                 ],
             ],
@@ -59,14 +59,14 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_tab(
         'tab_label_normal',
         [
-            'label' => __('Normal', 'alpha-form-premium'),
+            'label' => __('Normal', 'alpha-form-premium-main'),
         ]
     );
 
     $widget->add_control(
         'label_text_color',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_SECONDARY,
@@ -80,7 +80,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'label_background',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_ACCENT,
@@ -93,7 +93,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'label_width',
         [
-            'label' => __('Largura do Label', 'alpha-form-premium'),
+            'label' => __('Largura do Label', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['%', 'px', 'em', 'rem'],
             'default' => [
@@ -133,14 +133,14 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_tab(
         'tab_label_hover',
         [
-            'label' => __('Hover', 'alpha-form-premium'),
+            'label' => __('Hover', 'alpha-form-premium-main'),
         ]
     );
 
     $widget->add_control(
         'label_text_color_hover',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-wrapper label:not(.acceptance):hover' => 'color: {{VALUE}};',
@@ -151,7 +151,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'label_background_hover',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-input.radio label:hover, {{WRAPPER}} .alpha-form-input.checkbox label:hover' => 'background-color: {{VALUE}};',
@@ -176,7 +176,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'label_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form-premium'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-input option' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -187,7 +187,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'gap',
         [
-            'label' => __('Espaçamento', 'alpha-form-premium'),
+            'label' => __('Espaçamento', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => ['min' => 0, 'max' => 200],
@@ -202,7 +202,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_label_padding',
         [
-            'label' => __('Espaçamento interno', 'alpha-form-premium'),
+            'label' => __('Espaçamento interno', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em'],
             'default' => [
@@ -224,7 +224,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_radio_style',
         [
-            'label' => __('Key hint', 'alpha-form-premium'),
+            'label' => __('Key hint', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -233,7 +233,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_border_color',
         [
-            'label' => __('Cor da Borda', 'alpha-form-premium'),
+            'label' => __('Cor da Borda', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-color: {{VALUE}};',
@@ -243,7 +243,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_color',
         [
-            'label' => __('Cor do texto', 'alpha-form-premium'),
+            'label' => __('Cor do texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'color: {{VALUE}};',
@@ -255,7 +255,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'radio_background_color',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'default' => 'transparent',
             'selectors' => [
@@ -268,7 +268,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_size',
         [
-            'label' => __('Tamanho do Indicador', 'alpha-form-premium'),
+            'label' => __('Tamanho do Indicador', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -287,7 +287,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_border_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form-premium'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -304,7 +304,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'radio_hint_position_left',
         [
-            'label' => __('Posição (Esquerda)', 'alpha-form-premium'),
+            'label' => __('Posição (Esquerda)', 'alpha-form-premium-main'),
             'type' => \Elementor\Controls_Manager::SLIDER,
             'size_units' => ['px', '%', 'em', 'rem'],
             'range' => [
@@ -341,7 +341,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_text_auxiliar_style',
         [
-            'label' => __('Texto Auxiliar', 'alpha-form-premium'),
+            'label' => __('Texto Auxiliar', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -350,7 +350,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->add_control(
         'text_auxiliar_color',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_TEXT,

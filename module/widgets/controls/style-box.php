@@ -13,7 +13,7 @@ function register_style_box_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'style_box_section',
         [
-            'label' => __('Caixa geral', 'alpha-form-premium'),
+            'label' => __('Caixa geral', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -21,7 +21,7 @@ function register_style_box_controls(Widget_Base $widget)
     $widget->add_control(
         'box_background',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '.alpha-form-wrapper' => 'background-color: {{VALUE}};',
@@ -40,7 +40,7 @@ function register_style_box_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'box_padding',
         [
-            'label' => __('Espaçamento interno', 'alpha-form-premium'),
+            'label' => __('Espaçamento interno', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em'],
             'default' => [
@@ -60,7 +60,7 @@ function register_style_box_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'box_radius',
         [
-            'label' => __('Arredondamento', 'alpha-form-premium'),
+            'label' => __('Arredondamento', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
@@ -72,7 +72,7 @@ function register_style_box_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'box_gap',
         [
-            'label' => __('Espaço entre itens', 'alpha-form-premium'),
+            'label' => __('Espaço entre itens', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', '%', 'em'],
             'range' => [

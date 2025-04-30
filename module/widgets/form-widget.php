@@ -45,7 +45,7 @@ class Form_Widget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Alpha Form', 'alpha-form-premium');
+        return esc_html__('Alpha Form', 'alpha-form-premium-main');
     }
 
     public function get_icon()

@@ -14,7 +14,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->start_controls_section(
         'style_progress_section',
         [
-            'label' => __('Barra de Progresso', 'alpha-form-premium'),
+            'label' => __('Barra de Progresso', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -34,7 +34,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'progress_text_color',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_PRIMARY,
@@ -49,7 +49,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'progress_background_color',
         [
-            'label' => __('Cor da Barra de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor da Barra de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_SECONDARY,
@@ -64,7 +64,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_height',
         [
-            'label' => __('Altura da Barra', 'alpha-form-premium'),
+            'label' => __('Altura da Barra', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 'px' => [
@@ -85,7 +85,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'progress_background_color_total',
         [
-            'label' => __('Cor do Fundo', 'alpha-form-premium'),
+            'label' => __('Cor do Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-progress' => 'background-color: {{VALUE}};',
@@ -95,7 +95,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'progress_background_color_fill',
         [
-            'label' => __('Cor do progresso', 'alpha-form-premium'),
+            'label' => __('Cor do progresso', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'default' => Global_Colors::COLOR_ACCENT, // Accent como valor padrão
             'selectors' => [
@@ -108,7 +108,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form-premium'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
@@ -120,7 +120,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_width',
         [
-            'label' => __('Largura da Barra', 'alpha-form-premium'),
+            'label' => __('Largura da Barra', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
                 '%' => [
@@ -145,7 +145,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'prograss_border_color_x',
         [
-            'label' => __('Cor da Borda', 'alpha-form-premium'),
+            'label' => __('Cor da Borda', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
             '{{WRAPPER}} .alpha-form-progress' => 'border-color: {{VALUE}};',
@@ -156,7 +156,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_control(
         'progress_position_section_title',
         [
-            'label' => __('Posição da Barra (X / Y)', 'alpha-form-premium'),
+            'label' => __('Posição da Barra (X / Y)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::HEADING,
             'separator' => 'before',
         ]
@@ -173,7 +173,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_bar_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form-premium'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
@@ -185,7 +185,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'prograss__padding',
         [
-            'label' => __('Padding', 'alpha-form-premium'),
+            'label' => __('Padding', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-progress' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -197,7 +197,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_pos_x',
         [
-            'label' => __('Horizontal (X)', 'alpha-form-premium'),
+            'label' => __('Horizontal (X)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['%'],
             'range' => [
@@ -221,7 +221,7 @@ function register_style_progress_controls(Widget_Base $widget) {
     $widget->add_responsive_control(
         'progress_pos_y',
         [
-            'label' => __('Vertical (Y)', 'alpha-form-premium'),
+            'label' => __('Vertical (Y)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['%'],
             'range' => [

@@ -20,7 +20,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_actions_after_submit',
         [
-            'label' => __('Ações após envio', 'alpha-form-premium'),
+            'label' => __('Ações após envio', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
         ]
     );
@@ -46,7 +46,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->add_control(
         'actions',
         [
-            'label' => __('Escolher Ações', 'alpha-form-premium'),
+            'label' => __('Escolher Ações', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SELECT2,
             'multiple' => true,
             'label_block' => true,
@@ -61,7 +61,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_store',
         [
-            'label' => __('[Ação] Coletar Submissão', 'alpha-form-premium'),
+            'label' => __('[Ação] Coletar Submissão', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'store',
@@ -83,7 +83,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_webhook_settings',
         [
-            'label' => __('[Ação] Webhook', 'alpha-form-premium'),
+            'label' => __('[Ação] Webhook', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'webhook',
@@ -94,10 +94,10 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->add_control(
         'webhook_url',
         [
-            'label' => __('URL do Webhook', 'alpha-form-premium'),
+            'label' => __('URL do Webhook', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'label_block' => true,
-            'placeholder' => __('https://sua-api.com/webhook', 'alpha-form-premium'),
+            'placeholder' => __('https://sua-api.com/webhook', 'alpha-form-premium-main'),
             'default' => '',
         ]
     );
@@ -108,7 +108,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_email',
         [
-            'label' => __('[Ação] Enviar E-mail', 'alpha-form-premium'),
+            'label' => __('[Ação] Enviar E-mail', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'email',
@@ -117,7 +117,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     );
 
     $widget->add_control('email_to', [
-        'label' => __('Enviar para (To)', 'alpha-form-premium'),
+        'label' => __('Enviar para (To)', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXT,
         'placeholder' => 'ex: contato@seudominio.com',
         'default' => '',
@@ -125,7 +125,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     ]);
 
     $widget->add_control('email_subject', [
-        'label' => __('Assunto do E-mail', 'alpha-form-premium'),
+        'label' => __('Assunto do E-mail', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXT,
         'placeholder' => 'ex: Nova submissão do site',
         'default' => 'Nova submissão do formulário',
@@ -133,7 +133,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     ]);
 
     $widget->add_control('email_from', [
-        'label' => __('De (From Email)', 'alpha-form-premium'),
+        'label' => __('De (From Email)', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXT,
         'placeholder' => 'ex: sistema@seudominio.com',
         'default' => '',
@@ -141,7 +141,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     ]);
 
     $widget->add_control('email_from_name', [
-        'label' => __('Nome do Remetente (From Name)', 'alpha-form-premium'),
+        'label' => __('Nome do Remetente (From Name)', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXT,
         'placeholder' => 'ex: Site AlphaForm',
         'default' => 'AlphaForm',
@@ -149,7 +149,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     ]);
 
     $widget->add_control('email_reply_to', [
-        'label' => __('Responder para (Reply-To)', 'alpha-form-premium'),
+        'label' => __('Responder para (Reply-To)', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXT,
         'placeholder' => 'ex: contato@seudominio.com',
         'default' => '',
@@ -157,7 +157,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     ]);
 
     $widget->add_control('email_message', [
-        'label' => __('Mensagem', 'alpha-form-premium'),
+        'label' => __('Mensagem', 'alpha-form-premium-main'),
         'type' => Controls_Manager::TEXTAREA,
         'rows' => 6,
         'default' => '[all_fields]',
@@ -171,7 +171,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_action_redirect',
         [
-            'label' => __('[Ação] Redirecionar', 'alpha-form-premium'),
+            'label' => __('[Ação] Redirecionar', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'redirect',
@@ -182,7 +182,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->add_control(
         'redirect_url',
         [
-            'label' => __('URL de Redirecionamento', 'alpha-form-premium'),
+            'label' => __('URL de Redirecionamento', 'alpha-form-premium-main'),
             'type' => Controls_Manager::URL,
             'placeholder' => 'https://',
             'condition' => [
@@ -196,7 +196,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_activecampaign_map_fields',
         [
-            'label' => __('[Ação] ActiveCampaign', 'alpha-form-premium'),
+            'label' => __('[Ação] ActiveCampaign', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'integration_activecampaign',
@@ -294,10 +294,10 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         $widget->add_control(
             'ajax_button',
             [
-                'label' => __('Clique para receber dados', 'alpha-form-premium'),
+                'label' => __('Clique para receber dados', 'alpha-form-premium-main'),
                 'type' => Controls_Manager::BUTTON,
                 'button_type' => 'success',
-                'text' => __('Receber', 'alpha-form-premium'),
+                'text' => __('Receber', 'alpha-form-premium-main'),
                 'event' => 'alphaform:editor:send_click',
             ]
         );
@@ -327,7 +327,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_mailchimp_map_fields',
         [
-            'label' => __('[Ação] Mailchimp', 'alpha-form-premium'),
+            'label' => __('[Ação] Mailchimp', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'actions' => 'integration_mailchimp',
@@ -359,10 +359,10 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         $widget->add_control(
             'ajax_button_mc',
             [
-                'label' => __('Clique para receber dados', 'alpha-form-premium'),
+                'label' => __('Clique para receber dados', 'alpha-form-premium-main'),
                 'type' => Controls_Manager::BUTTON,
                 'button_type' => 'success',
-                'text' => __('Receber', 'alpha-form-premium'),
+                'text' => __('Receber', 'alpha-form-premium-main'),
                 'event' => 'alphaform:editor:send_click',
             ]
         );
@@ -398,7 +398,7 @@ function register_form_depois_do_envio_controls(Widget_Base $widget)
         $widget->add_control(
             'mailchimp_list_id',
             [
-                'label' => __('Selecione a audiência (lista)', 'alpha-form-premium'),
+                'label' => __('Selecione a audiência (lista)', 'alpha-form-premium-main'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $list_options,
                 'default' => '',

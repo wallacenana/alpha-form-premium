@@ -15,7 +15,7 @@ function register_form_style_titulo_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'style_titulo_section',
         [
-            'label' => __('Título', 'alpha-form-premium'),
+            'label' => __('Título', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -34,7 +34,7 @@ function register_form_style_titulo_controls(Widget_Base $widget)
     $widget->add_control(
         'titulo_color',
         [
-            'label' => __('Cor da Label', 'alpha-form-premium'),
+            'label' => __('Cor da Label', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_PRIMARY,
@@ -49,19 +49,19 @@ function register_form_style_titulo_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'alinhamento',
         [
-            'label' => esc_html__('Alinhamento', 'alpha-form-premium'),
+            'label' => esc_html__('Alinhamento', 'alpha-form-premium-main'),
             'type' => Controls_Manager::CHOOSE,
             'options' => [
                 'left' => [
-                    'title' => esc_html__('Left', 'alpha-form-premium'),
+                    'title' => esc_html__('Left', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-left',
                 ],
                 'center' => [
-                    'title' => esc_html__('Center', 'alpha-form-premium'),
+                    'title' => esc_html__('Center', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-center',
                 ],
                 'right' => [
-                    'title' => esc_html__('Right', 'alpha-form-premium'),
+                    'title' => esc_html__('Right', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-right',
                 ],
             ],

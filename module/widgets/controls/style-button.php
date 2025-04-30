@@ -16,7 +16,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'style_button_section',
         [
-            'label' => __('Botões', 'alpha-form-premium'),
+            'label' => __('Botões', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );
@@ -39,14 +39,14 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->start_controls_tab(
         'tab_button_normal',
         [
-            'label' => __('Normal', 'alpha-form-premium'),
+            'label' => __('Normal', 'alpha-form-premium-main'),
         ]
     );
 
     $widget->add_control(
         'button_text_color',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_SECONDARY,
@@ -60,7 +60,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_control(
         'button_background',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'global' => [
                 'default' => Global_Colors::COLOR_ACCENT,
@@ -77,14 +77,14 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->start_controls_tab(
         'tab_button_hover',
         [
-            'label' => __('Hover', 'alpha-form-premium'),
+            'label' => __('Hover', 'alpha-form-premium-main'),
         ]
     );
 
     $widget->add_control(
         'button_text_color_hover',
         [
-            'label' => __('Cor do Texto', 'alpha-form-premium'),
+            'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-next-button:hover' => 'color: {{VALUE}};',
@@ -95,7 +95,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_control(
         'button_background_hover',
         [
-            'label' => __('Cor de Fundo', 'alpha-form-premium'),
+            'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
                 '{{WRAPPER}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-next-button:hover' => 'background-color: {{VALUE}};',
@@ -111,7 +111,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_control(
         'button_border_style',
         [
-            'label' => __('Borda do Botão', 'alpha-form-premium'),
+            'label' => __('Borda do Botão', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SELECT,
             'default' => 'none',
             'options' => [
@@ -137,7 +137,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'button_radius',
         [
-            'label' => __('Borda Arredondada', 'alpha-form-premium'),
+            'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'default' => [
                 'top' => 4,
@@ -155,7 +155,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'button_padding_x',
         [
-            'label' => __('Espaçamento interno', 'alpha-form-premium'),
+            'label' => __('Espaçamento interno', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em'],
             'default' => [
@@ -176,7 +176,7 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'button_margin_x',
         [
-            'label' => __('Espaço da margem', 'alpha-form-premium'),
+            'label' => __('Espaço da margem', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em'],
             'default' => [
@@ -195,19 +195,19 @@ function register_style_botao_controls(Widget_Base $widget)
     $widget->add_responsive_control(
         'alinhamento_btn',
         [
-            'label' => esc_html__('Alinhamento', 'alpha-form-premium'),
+            'label' => esc_html__('Alinhamento', 'alpha-form-premium-main'),
             'type' => Controls_Manager::CHOOSE,
             'options' => [
                 '' => [
-                    'title' => esc_html__('Left', 'alpha-form-premium'),
+                    'title' => esc_html__('Left', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-left',
                 ],
                 'margin: 0 auto' => [
-                    'title' => esc_html__('Center', 'alpha-form-premium'),
+                    'title' => esc_html__('Center', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-center',
                 ],
                 'margin-left: auto' => [
-                    'title' => esc_html__('Right', 'alpha-form-premium'),
+                    'title' => esc_html__('Right', 'alpha-form-premium-main'),
                     'icon' => 'eicon-text-align-right',
                 ],
             ],

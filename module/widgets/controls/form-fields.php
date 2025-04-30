@@ -14,14 +14,14 @@ function register_form_fields_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'section_form_fields',
         [
-            'label' => __('Campos do Formulário', 'alpha-form-premium'),
+            'label' => __('Campos do Formulário', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_CONTENT,
         ]
     );
     $widget->add_control(
         'form_name',
         [
-            'label' => __('Nome do Formulário', 'alpha-form-premium'),
+            'label' => __('Nome do Formulário', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'placeholder' => 'Formulário Alpha',
             'default' => 'Formulário Alpha',
@@ -37,7 +37,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_type',
         [
-            'label' => __('Tipo do Campo', 'alpha-form-premium'),
+            'label' => __('Tipo do Campo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SELECT,
             'options' => [
                 'text'      => 'Texto',
@@ -67,14 +67,14 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->start_controls_tabs('form_fields_tabs');
 
     $repeater->start_controls_tab('form_fields_conteudo_tab', [
-        'label' => esc_html__('Conteúdo', 'alpha-form-premium'),
+        'label' => esc_html__('Conteúdo', 'alpha-form-premium-main'),
     ]);
 
 
     $repeater->add_control(
         'acceptance_text',
         [
-            'label' => __('Texto da Aceitação', 'alpha-form-premium'),
+            'label' => __('Texto da Aceitação', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXTAREA,
             'default' => 'Li e aceito a política de privacidade.',
             'condition' => [
@@ -85,7 +85,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_label',
         [
-            'label' => __('Rótulo', 'alpha-form-premium'),
+            'label' => __('Rótulo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'default' => 'Item',
         ]
@@ -93,7 +93,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_descricao',
         [
-            'label' => __('Descrição', 'alpha-form-premium'),
+            'label' => __('Descrição', 'alpha-form-premium-main'),
             'type' => Controls_Manager::WYSIWYG,
             'default' => '',
             'condition' => [
@@ -106,7 +106,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_placeholder',
         [
-            'label' => __('Placeholder', 'alpha-form-premium'),
+            'label' => __('Placeholder', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'default' => '',
             'condition' => [
@@ -119,13 +119,13 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_options',
         [
-            'label' => __('Opções (uma por linha)', 'alpha-form-premium'),
+            'label' => __('Opções (uma por linha)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXTAREA,
             'rows' => 5,
             'condition' => [
                 'field_type' => ['select', 'radio', 'checkbox'],
             ],
-            'description' => __('Insira cada opção em uma linha separada. Para diferenciar entre rótulo e valor, separe-os com um caractere de barra vertical ("|"). Por exemplo: First Name|f_name', 'alpha-form-premium'),
+            'description' => __('Insira cada opção em uma linha separada. Para diferenciar entre rótulo e valor, separe-os com um caractere de barra vertical ("|"). Por exemplo: First Name|f_name', 'alpha-form-premium-main'),
         ]
     );
 
@@ -133,7 +133,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'next_button_text',
         [
-            'label' => __('Texto do botão', 'alpha-form-premium'),
+            'label' => __('Texto do botão', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'default' => 'Ok',
             'placeholder' => 'ex: Continuar',
@@ -146,10 +146,10 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'key-hint',
         [
-            'label' => __('Mostrar marcadores', 'alpha-form-premium'),
+            'label' => __('Mostrar marcadores', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SWITCHER,
-            'label_on' => __('Sim', 'alpha-form-premium'),
-            'label_off' => __('Não', 'alpha-form-premium'),
+            'label_on' => __('Sim', 'alpha-form-premium-main'),
+            'label_off' => __('Não', 'alpha-form-premium-main'),
             'return_value' => 'yes',
             'default' => 'yes',
             'condition' => [
@@ -161,10 +161,10 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'required',
         [
-            'label' => __('Obrigatório', 'alpha-form-premium'),
+            'label' => __('Obrigatório', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SWITCHER,
-            'label_on' => __('Sim', 'alpha-form-premium'),
-            'label_off' => __('Não', 'alpha-form-premium'),
+            'label_on' => __('Sim', 'alpha-form-premium-main'),
+            'label_off' => __('Não', 'alpha-form-premium-main'),
             'return_value' => 'yes',
             'default' => '',
             'condition' => [
@@ -191,7 +191,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->start_controls_tab(
         'form_fields_advanced_tab',
         [
-            'label' => esc_html__('Avançado', 'alpha-form-premium'),
+            'label' => esc_html__('Avançado', 'alpha-form-premium-main'),
             'condition' => [
                 'field_type!' => 'html',
             ],
@@ -200,7 +200,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_value',
         [
-            'label' => __('Valor Padrão', 'alpha-form-premium'),
+            'label' => __('Valor Padrão', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'default' => '',
             'condition' => [
@@ -212,9 +212,9 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'field_pattern',
         [
-            'label' => __('Padrão (Pattern)', 'alpha-form-premium'),
+            'label' => __('Padrão (Pattern)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
-            'description' => __('Regex ou padrão de validação HTML5. Ex: [0-9]{3}-[0-9]{2}', 'alpha-form-premium'),
+            'description' => __('Regex ou padrão de validação HTML5. Ex: [0-9]{3}-[0-9]{2}', 'alpha-form-premium-main'),
             'condition' => [
                 'field_type' => ['text', 'email', 'password'],
             ],
@@ -224,10 +224,10 @@ function register_form_fields_controls(Widget_Base $widget)
     $repeater->add_control(
         'custom_id',
         [
-            'label' => esc_html__('ID', 'alpha-form-premium'),
+            'label' => esc_html__('ID', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXT,
             'description' => sprintf(
-                esc_html__('Certifique-se de que o ID seja único e não usado em outra parte da página. Este campo permite letras (A-z), números (0-9) e underline, sem espaços.', 'alpha-form-premium'),
+                esc_html__('Certifique-se de que o ID seja único e não usado em outra parte da página. Este campo permite letras (A-z), números (0-9) e underline, sem espaços.', 'alpha-form-premium-main'),
                 '<code>',
                 '</code>'
             ),
@@ -255,10 +255,10 @@ function register_form_fields_controls(Widget_Base $widget)
     $widget->add_control(
         'show_required_mark',
         [
-            'label' => __('Marcar obrigatórios', 'alpha-form-premium'),
+            'label' => __('Marcar obrigatórios', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SWITCHER,
-            'label_on' => __('Sim', 'alpha-form-premium'),
-            'label_off' => __('Não', 'alpha-form-premium'),
+            'label_on' => __('Sim', 'alpha-form-premium-main'),
+            'label_off' => __('Não', 'alpha-form-premium-main'),
             'return_value' => 'yes',
             'default' => 'yes',
         ]
@@ -267,7 +267,7 @@ function register_form_fields_controls(Widget_Base $widget)
     $widget->add_control(
         'form_fields',
         [
-            'label' => __('Campos', 'alpha-form-premium'),
+            'label' => __('Campos', 'alpha-form-premium-main'),
             'type' => Controls_Manager::REPEATER,
             'fields' => $repeater->get_controls(),
             'default' => [
