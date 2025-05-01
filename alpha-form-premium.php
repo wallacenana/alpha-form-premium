@@ -195,10 +195,10 @@ function alpha_form_premium_activate()
 add_filter('pre_set_site_transient_update_plugins', function ($transient) {
     if (empty($transient->checked)) return $transient;
 
-    $plugin_slug     = 'alpha-form-premium-main/alpha-form-premium.php'; // 👈 agora é com -main
+    $plugin_slug     = 'alpha-form-premium/alpha-form-premium.php'; 
     $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin_slug);
     $current_version = isset($plugin_data['Version']) ? $plugin_data['Version'] : '0.0.0';
-    $update_url      = 'https://alphaform.com.br/update/update-check.php';
+    $update_url      = 'https://assets.alphaform.com.br/update';
 
     $response = wp_remote_get($update_url);
     if (is_wp_error($response)) return $transient;
