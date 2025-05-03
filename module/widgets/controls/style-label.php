@@ -16,7 +16,7 @@ function register_form_style_label_controls(Widget_Base $widget)
     $widget->start_controls_section(
         'style_label_section',
         [
-            'label' => __('Checks Label', 'alpha-form-premium-main'),
+            'label' => __('Campos de opções', 'alpha-form-premium-main'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]
     );

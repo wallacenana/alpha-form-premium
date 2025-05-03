@@ -85,7 +85,7 @@ function register_style_box_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} form' => 'gap: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-field' => 'gap: {{SIZE}}{{UNIT}};',
             ],
         ]
     );

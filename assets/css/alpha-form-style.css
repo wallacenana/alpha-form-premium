@@ -30,6 +30,7 @@ form.alpha-form {
     gap: 10px;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
 }
 
 .alpha-form button {
@@ -37,9 +38,12 @@ form.alpha-form {
 }
 
 .alpha-form-wrapper h3,
-p.alpha-form-description {
+.alpha-form-wrapper,
+.alpha-form-description p,
+.alpha-form-description {
     margin: 0;
     width: 100%;
+    display: block;
 }
 
 .alpha-form-field {
@@ -50,6 +54,9 @@ p.alpha-form-description {
     z-index: 0;
     height: 0;
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .alpha-form-field.active {
@@ -59,7 +66,7 @@ p.alpha-form-description {
     z-index: 1;
     transform: translateY(-50%);
     top: 50%;
-    display: contents;
+    display: flex;
     height: auto
 }
 
@@ -730,9 +737,10 @@ textarea {
     background-color: var(--cor-branco);
     color: var(--cor-black);
 }
+
 .alpha-form-input.select select {
-     padding-right: 3rem;
-    
+    padding-right: 3rem;
+
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -1000,9 +1008,9 @@ textarea {
 .alpha-form-custom-icon::before {
     content: '';
     display: inline-block;
-    background-image: url('../img/icon-widget.png'); /* ajuste o caminho */
+    background-image: url('../img/icon-widget.png');
+    /* ajuste o caminho */
     background-size: cover;
     width: 20px;
     height: 20px;
 }
-

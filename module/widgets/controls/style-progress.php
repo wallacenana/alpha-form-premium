@@ -153,15 +153,6 @@ function register_style_progress_controls(Widget_Base $widget) {
         ]
     );
     
-    $widget->add_control(
-        'progress_position_section_title',
-        [
-            'label' => __('Posição da Barra (X / Y)', 'alpha-form-premium-main'),
-            'type' => Controls_Manager::HEADING,
-            'separator' => 'before',
-        ]
-    );
-    
     $widget->add_group_control(
         Group_Control_Border::get_type(),
         [
@@ -194,6 +185,16 @@ function register_style_progress_controls(Widget_Base $widget) {
     );
     
     // Eixo X (horizontal)
+    
+    $widget->add_control(
+        'progress_position_section_title',
+        [
+            'label' => __('Posição da Barra (X / Y)', 'alpha-form-premium-main'),
+            'type' => Controls_Manager::HEADING,
+            'separator' => 'before',
+        ]
+    );
+    
     $widget->add_responsive_control(
         'progress_pos_x',
         [
