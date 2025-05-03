@@ -4,6 +4,22 @@
 add_action('wp_ajax_alphaform_get_widget_actions', 'alphaform_get_widget_actions');
 add_action('wp_ajax_nopriv_alphaform_get_widget_actions', 'alphaform_get_widget_actions');
 
+function buscar_widget_recursivo($elements, $widget_id)
+{
+    foreach ($elements as $element) {
+        if (($element['id'] ?? '') === $widget_id && ($element['widgetType'] ?? '') === 'alpha_form') {
+            return $element;
+        }
+
+        if (!empty($element['elements']) && is_array($element['elements'])) {
+            $found = buscar_widget_recursivo($element['elements'], $widget_id);
+            if ($found) return $found;
+        }
+    }
+
+    return null;
+}
+
 function alphaform_get_widget_actions()
 {
     check_ajax_referer('alpha_form_nonce', 'nonce');
@@ -21,38 +37,32 @@ function alphaform_get_widget_actions()
     $data = json_decode($raw, true);
     if (!is_array($data)) wp_send_json_error('Erro ao processar JSON.');
 
-    foreach ($data as $element) {
-        if (!empty($element['elements']) && is_array($element['elements'])) {
-            foreach ($element['elements'] as $child) {
-                if (($child['id'] ?? '') === $widget_id && ($child['widgetType'] ?? '') === 'alpha_form') {
-                    $settings = $child['settings'] ?? [];
-                    $actions = $settings['actions'] ?? [];
-                    $listaId = $settings['listasExistentes'] ?? [];
-                    $listaIdMC = $settings['mailchimp_list_id'] ?? [];
-                    $webhook_url = $settings['webhook_url'] ?? [];
+    $widget = buscar_widget_recursivo($data, $widget_id);
+    if (!$widget) wp_send_json_error('Widget não encontrado no post.');
 
-                    $map = [];
-                    foreach ($settings as $key => $value) {
-                        if (strpos($key, 'map_field_') === 0) {
-                            $field_key = str_replace('map_field_', '', $key);
-                            $map[$field_key] = $value;
-                        }
-                    }
+    $settings = $widget['settings'] ?? [];
+    $actions = $settings['actions'] ?? [];
+    $listaId = $settings['listasExistentes'] ?? [];
+    $listaIdMC = $settings['mailchimp_list_id'] ?? [];
+    $webhook_url = $settings['webhook_url'] ?? [];
 
-                    wp_send_json_success([
-                        'actions' => $actions,
-                        'map' => $map,
-                        'listaId' => $listaId,
-                        'listaIdMC' => $listaIdMC,
-                        'webhook_url' => $webhook_url,
-                    ]);
-                }
-            }
+    $map = [];
+    foreach ($settings as $key => $value) {
+        if (strpos($key, 'map_field_') === 0) {
+            $field_key = str_replace('map_field_', '', $key);
+            $map[$field_key] = $value;
         }
     }
 
-    wp_send_json_error('Widget não encontrado no post.');
+    wp_send_json_success([
+        'actions' => $actions,
+        'map' => $map,
+        'listaId' => $listaId,
+        'listaIdMC' => $listaIdMC,
+        'webhook_url' => $webhook_url,
+    ]);
 }
+
 
 
 add_action('wp_ajax_alphaform_send_integrations', 'alphaform_send_integrations_handler');

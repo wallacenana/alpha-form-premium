@@ -8,7 +8,6 @@ function alpha_form_save_response()
     global $wpdb;
 
     $form_id      = sanitize_text_field(wp_unslash($_POST['form_id'] ?? ''));
-    $event_type   = intval(wp_unslash($_POST['event_type'] ?? ''));
     $session_id   = sanitize_text_field(wp_unslash($_POST['session_id'] ?? ''));
     $widget_id    = sanitize_text_field(wp_unslash($_POST['widgetId'] ?? ''));
     $postId       = sanitize_text_field(wp_unslash($_POST['postId'] ?? ''));

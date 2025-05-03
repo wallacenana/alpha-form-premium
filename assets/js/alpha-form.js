@@ -340,11 +340,6 @@ if (wrapper) {
     }
 
     async function handleSubmit(form) {
-        const e = window.event;
-        if (e && typeof e.preventDefault === 'function') {
-            e.preventDefault();
-        }
-
         const currentField = fields[currentIndex];
         const isValid = validateField(currentField);
         if (!isValid) return;
@@ -384,7 +379,7 @@ if (wrapper) {
             });
         }
 
-        const res = await fetch(alphaFormVars.ajaxurl, {
+        const rens = await fetch(alphaFormVars.ajaxurl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
@@ -395,7 +390,7 @@ if (wrapper) {
             })
         });
 
-        const json = await res.json();
+        const json = await rens.json();
         if (!json.success) {
             console.error('[AlphaForm] Erro ao buscar ações:', json);
             return;
@@ -658,6 +653,7 @@ if (wrapper) {
 
         document.querySelectorAll('.alpha-form').forEach(form => {
             form.addEventListener('submit', async function (e) {
+                console.log(form)
                 e.preventDefault();
                 await handleSubmit(form)
             });
