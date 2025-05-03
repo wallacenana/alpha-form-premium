@@ -8,12 +8,11 @@ if (!defined('ABSPATH')) exit;
 function render_alpha_form_fields($settings, $widget_id)
 {
     echo '<div class="alpha-form-wrapper">';
-
     $form_name = $settings['form_name'] ?? 'formulario-alpha';
-
     $datashortcode = $settings['redirect_url']['url'] ?? '';
-
     $show_submit_screen = $settings['show_submit_screen'] === 'yes';
+    $btn_width = $settings['button_width_percent'] ?? '';
+    $style = 'width: ' . esc_attr($btn_width) . '%;';
 
 
     echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_name) . '" data-redirect="' . esc_attr($datashortcode) .  '" data-auto-submit="' . esc_attr($show_submit_screen) . '">';
@@ -151,7 +150,7 @@ function render_alpha_form_fields($settings, $widget_id)
             }
 
             if (!in_array($type, ['select', 'radio', 'acceptance']) && $btn_text) {
-                echo '<button type="button" class="alpha-form-next-button">' . esc_html($btn_text) . '</button>';
+                echo '<button type="button" class="alpha-form-next-button" style="' . esc_attr($style) . '">' . esc_html($btn_text) . '</button>';
             }
 
             echo '</div>';
@@ -161,11 +160,9 @@ function render_alpha_form_fields($settings, $widget_id)
 
     // Botão final
     $btn_text  = $settings['button_text'] ?? 'Enviar';
-    $btn_width = $settings['button_width_percent'] ?? '100';
     $btn_id    = $settings['button_id'] ?? '';
     $btn_icon  = $settings['button_icon']['value'] ?? '';
     $btnvalue  = $settings['btn_value'] ?? '';
-    $style = 'width: ' . esc_attr($btn_width) . '%;';
     $class = 'alpha-form-submit';
 
     echo $btnvalue ? '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>' : "";

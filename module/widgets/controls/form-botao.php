@@ -53,6 +53,7 @@ function register_form_botao_controls(Widget_Base $widget)
             'label' => __('Largura do Botão (%)', 'alpha-form-premium-main'),
             'type' => Controls_Manager::SELECT,
             'options' => [
+                ''  => 'Auto',
                 '15'  => '15%',
                 '20'  => '20%',
                 '25'  => '25%',
@@ -71,7 +72,7 @@ function register_form_botao_controls(Widget_Base $widget)
                 '95'  => '95%',
                 '100' => '100%',
             ],
-            'default' => '35',
+            'default' => 'Auto',
         ]
     );
 
