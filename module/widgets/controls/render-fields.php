@@ -13,7 +13,10 @@ function render_alpha_form_fields($settings, $widget_id)
 
     $datashortcode = $settings['redirect_url']['url'] ?? '';
 
-    echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_name) . '" data-redirect="' . esc_attr($datashortcode) . '">';
+    $show_submit_screen = $settings['show_submit_screen'] === 'yes';
+
+
+    echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_name) . '" data-redirect="' . esc_attr($datashortcode) .  '" data-auto-submit="' . esc_attr($show_submit_screen) . '">';
 
     if (!empty($settings['form_fields'])) {
         foreach ($settings['form_fields'] as $i => $field) {
@@ -37,7 +40,7 @@ function render_alpha_form_fields($settings, $widget_id)
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
             echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
-            echo wp_kses_post('<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>');
+            echo $label ? wp_kses_post('<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>') : "";
             if (!empty($field['field_descricao'])) {
                 echo '<div class="alpha-form-description">' . wp_kses_post($field['field_descricao']) . '</div>';
             }
@@ -154,25 +157,27 @@ function render_alpha_form_fields($settings, $widget_id)
             echo '</div>';
         }
     }
+    echo '<div class="alpha-form-field alpha-form-final">';
 
     // Botão final
     $btn_text  = $settings['button_text'] ?? 'Enviar';
-    $btn_size  = $settings['button_size'] ?? 'medium';
     $btn_width = $settings['button_width_percent'] ?? '100';
     $btn_id    = $settings['button_id'] ?? '';
     $btn_icon  = $settings['button_icon']['value'] ?? '';
     $btnvalue  = $settings['btn_value'] ?? '';
     $style = 'width: ' . esc_attr($btn_width) . '%;';
-    $class = 'alpha-form-submit alpha-btn-size-' . esc_attr($btn_size);
+    $class = 'alpha-form-submit';
 
-    echo '<div class="alpha-form-field alpha-form-step">';
-    echo '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>';
+    echo $btnvalue ? '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>' : "";
     echo '<p class="alpha-form-description">' . esc_html($settings['btn_descricao']) . '</p>';
-    echo '<button type="submit" id="' . esc_attr($btn_id) . '" class="' . esc_attr($class) . '" style="' . esc_attr($style) . '">';
-    if (!empty($btn_icon)) {
-        echo '<i class="' . esc_attr($btn_icon) . '" style="margin-right: 5px;"></i>';
+
+    if ($show_submit_screen) {
+        echo '<button type="submit" id="' . esc_attr($btn_id) . '" class="' . esc_attr($class) . '" style="' . esc_attr($style) . '">';
+        if (!empty($btn_icon)) {
+            echo '<i class="' . esc_attr($btn_icon) . '" style="margin-right: 5px;"></i>';
+        }
+        echo esc_html($btn_text) . '</button>';
     }
-    echo esc_html($btn_text) . '</button>';
     echo '</div>';
 
     // Barra de progresso e controles

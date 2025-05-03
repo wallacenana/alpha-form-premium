@@ -26,11 +26,7 @@
 
 form.alpha-form {
     width: 100%;
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
+    position: relative
 }
 
 .alpha-form button {
@@ -53,19 +49,17 @@ form.alpha-form {
     transition: all 0.5s ease;
     z-index: 0;
     height: 0;
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    transform: translatey(40px);
 }
 
 .alpha-form-field.active {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+    transform: translatey(0);
     z-index: 1;
-    transform: translateY(-50%);
-    top: 50%;
     display: flex;
     height: auto
 }

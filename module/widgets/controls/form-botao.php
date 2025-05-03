@@ -43,7 +43,7 @@ function register_form_botao_controls(Widget_Base $widget)
         [
             'label' => __('Descrição', 'alpha-form-premium-main'),
             'type' => Controls_Manager::TEXTAREA,
-            'default' => 'Clique no botão abaixo para ser redirecionado',
+            'default' => 'Parabéns pelo seu cadastro',
         ]
     );
 

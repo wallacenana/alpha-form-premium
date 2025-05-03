@@ -223,49 +223,41 @@ if (wrapper) {
     }
 
     function updateProgressBar(index) {
-        const visible = document.querySelector('.alpha-form-progress-container');
-        if (!visible)
-            return
-        const allSteps = document.querySelectorAll('.alpha-form-step');
-
-        // Filtra os campos visíveis (exclui hidden e a introdução)
-        const visibleSteps = Array.from(allSteps).filter((step, i) => {
-            const input = step.querySelector('input, textarea, select');
-            const isHidden = input?.type === 'hidden';
-            const isIntro = i === 0;
-            const isSubmit = step.querySelector('button[type="submit"]');
-            return !isHidden && !isIntro && !isSubmit;
-        });
-
         const progressBar = document.querySelector('.alpha-form-progress-fill');
         const progressText = document.querySelector('.alpha-form-progress-text');
 
-        const currentStep = allSteps[index];
-        const visibleIndex = visibleSteps.indexOf(currentStep);
+        if (!progressBar || !progressText) return;
 
-        // Total real = campos visíveis + 1 (para o submit)
-        const total = visibleSteps.length + 1;
+        const currentField = fields[index];
+        const isLastStep = currentField.classList.contains('alpha-form-final');
 
-        // Se for o campo final (submit), já mostra 100%
-        if (currentStep && currentStep.querySelector('button[type="submit"]')) {
+        if (isLastStep) {
             progressBar.style.width = '100%';
             progressText.textContent = '100%';
             return;
         }
 
-        // Se o campo não está na lista visível (ex: introdução ou hidden), zera
-        if (visibleIndex === -1) {
+        const validSteps = Array.from(fields).filter(f => {
+            const isHidden = !!f.querySelector('input[type="hidden"]');
+            return !isHidden && getComputedStyle(f).display !== 'none' && !f.classList.contains('final');
+        });
+
+        const visibleIndex = validSteps.indexOf(currentField);
+
+        // Se estiver no primeiro campo, a porcentagem é 0
+        if (visibleIndex === 0) {
             progressBar.style.width = '0%';
             progressText.textContent = '0%';
             return;
         }
 
-        // Calcula o progresso normalmente
-        const percent = Math.round((visibleIndex + 1) / total * 100);
+        const total = validSteps.length;
+        const percentage = Math.round((visibleIndex / total) * 100);
 
-        progressBar.style.width = percent + '%';
-        progressText.textContent = percent + '%';
+        progressBar.style.width = percentage + '%';
+        progressText.textContent = percentage + '%';
     }
+
 
     function applyMasks() {
         document.querySelectorAll('[data-mask]').forEach(function (input) {
@@ -345,6 +337,124 @@ if (wrapper) {
                 input.value = value;
             });
         });
+    }
+
+    async function handleSubmit(form) {
+        const e = window.event;
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
+
+        const currentField = fields[currentIndex];
+        const isValid = validateField(currentField);
+        if (!isValid) return;
+
+        mostrarLoader();
+
+        const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
+        const widgetId = form.dataset.widgetId;
+        const raw = {};
+
+        const inputs = form.querySelectorAll('input, textarea, select');
+        const data = {};
+
+        // inicio do envio com js
+        inputs.forEach(input => {
+            if (!input.name) return;
+
+            if (input.type === 'checkbox') {
+                if (!data[input.name]) data[input.name] = [];
+                if (input.checked) data[input.name].push(input.value);
+            } else if (input.type === 'radio') {
+                if (input.checked) data[input.name] = input.value;
+            } else {
+                data[input.name] = input.value;
+            }
+
+            raw[input.name] = input.value;
+        });
+
+        let redirectUrl = form.dataset.redirect;
+
+        if (redirectUrl && redirectUrl.includes('[field_')) {
+            redirectUrl = redirectUrl.replace(/\[field_([^\]]+)\]/g, (match, key) => {
+                const input = document.querySelector(`[data-shortcode="field_${key}"]`);
+                const value = input?.value || '';
+                return encodeURIComponent(value);
+            });
+        }
+
+        const res = await fetch(alphaFormVars.ajaxurl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'alphaform_get_widget_actions',
+                post_id: postId,
+                widget_id: widgetId,
+                nonce: alphaFormVars.nonce
+            })
+        });
+
+        const json = await res.json();
+        if (!json.success) {
+            console.error('[AlphaForm] Erro ao buscar ações:', json);
+            return;
+        }
+
+        const actions = json.data.actions || [];
+        const map = json.data.map || {};
+        const listaId = json.data.listaId || {};
+        const listaIdMC = json.data.listaIdMC || {};
+        const webhook_url = json.data.webhook_url || '';
+
+        const dadosMapeados = {};
+
+        Object.entries(map).forEach(([chave, idCampo]) => {
+            if (!idCampo) return;
+
+            const inputEl = document.querySelector(`[id="${idCampo}"]`);
+
+            if (inputEl && inputEl.value !== '') {
+                dadosMapeados[chave] = inputEl.value;
+            } else {
+                console.warn(`[AlphaForm] Campo com ID "${idCampo}" não encontrado ou está vazio (${chave})`);
+            }
+        });
+
+
+        // Envio dos dados mapeados
+        const envio = await fetch(alphaFormVars.ajaxurl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'alphaform_send_integrations',
+                nonce: alphaFormVars.nonce,
+                ...dadosMapeados,
+                post_id: postId,
+                widget_id: widgetId,
+                listaId: listaId,
+                listaIdMC: listaIdMC,
+                webhook_url: webhook_url,
+                session_id: sessionId,
+                is_final_submission: 1,
+                actions: JSON.stringify(actions),
+                ...data
+            })
+        });
+
+        const resultado = await envio.json();
+
+        if (resultado.success && redirectUrl)
+            window.location.href = redirectUrl;
+        else if (!resultado.success) {
+            const erro = typeof json.data === 'string' ? json.data : 'Erro no envio.';
+            alert('[AlphaForm] Falha no envio: ' + erro);
+            esconderLoader();
+            return
+        }
+
+        esconderLoader();
+
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -517,119 +627,41 @@ if (wrapper) {
                 console.error('Alpha Form: erro na requisição fetch.', error);
             });
 
+
+        const form = document.querySelector('form[data-auto-submit=""]');
+        const steps = form ? Array.from(form.querySelectorAll('.alpha-form-step')) : [];
+
+        if (form && steps.length) {
+            const lastStep = steps[steps.length - 1];
+            const nextButton = lastStep.querySelector('.alpha-form-next-button');
+            const input = lastStep.querySelector('input, select, textarea');
+
+            if (nextButton) {
+                nextButton.setAttribute('type', 'submit');
+                nextButton.classList.add('alpha-form-submit');
+            } else if (input) {
+                const type = input.type;
+
+                if (type === 'radio' || type === 'checkbox') {
+                    lastStep.querySelectorAll(`input[type="${type}"]`).forEach(el => {
+                        el.addEventListener('change', () => handleSubmit(form));
+                    });
+                } else if (input.tagName.toLowerCase() === 'select') {
+                    input.addEventListener('change', () => handleSubmit(form));
+                } else {
+                    input.addEventListener('keydown', e => {
+                        if (e.key === 'Enter') handleSubmit(form);
+                    });
+                }
+            }
+        }
+
         document.querySelectorAll('.alpha-form').forEach(form => {
             form.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                mostrarLoader();
-
-                const postId = parseInt(document.querySelector('[data-elementor-id]')?.dataset.elementorId || 0);
-                const widgetId = form.dataset.widgetId;
-                const raw = {};
-
-                const inputs = form.querySelectorAll('input, textarea, select');
-                const data = {};
-
-                // inicio do envio com js
-                inputs.forEach(input => {
-                    if (!input.name) return;
-
-                    if (input.type === 'checkbox') {
-                        if (!data[input.name]) data[input.name] = [];
-                        if (input.checked) data[input.name].push(input.value);
-                    } else if (input.type === 'radio') {
-                        if (input.checked) data[input.name] = input.value;
-                    } else {
-                        data[input.name] = input.value;
-                    }
-
-                    raw[input.name] = input.value;
-                });
-
-                let redirectUrl = form.dataset.redirect;
-
-                if (redirectUrl && redirectUrl.includes('[field_')) {
-                    redirectUrl = redirectUrl.replace(/\[field_([^\]]+)\]/g, (match, key) => {
-                        const input = document.querySelector(`[data-shortcode="field_${key}"]`);
-                        const value = input?.value || '';
-                        return encodeURIComponent(value);
-                    });
-                }
-
-                const res = await fetch(alphaFormVars.ajaxurl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'alphaform_get_widget_actions',
-                        post_id: postId,
-                        widget_id: widgetId,
-                        nonce: alphaFormVars.nonce
-                    })
-                });
-
-                const json = await res.json();
-                if (!json.success) {
-                    console.error('[AlphaForm] Erro ao buscar ações:', json);
-                    return;
-                }
-
-                const actions = json.data.actions || [];
-                const map = json.data.map || {};
-                const listaId = json.data.listaId || {};
-                const listaIdMC = json.data.listaIdMC || {};
-                const webhook_url = json.data.webhook_url || '';
-
-                const dadosMapeados = {};
-
-                Object.entries(map).forEach(([chave, idCampo]) => {
-                    if (!idCampo) return;
-
-                    const inputEl = document.querySelector(`[id="${idCampo}"]`);
-
-                    if (inputEl && inputEl.value !== '') {
-                        dadosMapeados[chave] = inputEl.value;
-                    } else {
-                        console.warn(`[AlphaForm] Campo com ID "${idCampo}" não encontrado ou está vazio (${chave})`);
-                    }
-                });
-
-
-                // Envio dos dados mapeados
-                const envio = await fetch(alphaFormVars.ajaxurl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'alphaform_send_integrations',
-                        nonce: alphaFormVars.nonce,
-                        ...dadosMapeados,
-                        post_id: postId,
-                        widget_id: widgetId,
-                        listaId: listaId,
-                        listaIdMC: listaIdMC,
-                        webhook_url: webhook_url,
-                        session_id: sessionId,
-                        is_final_submission: 1,
-                        actions: JSON.stringify(actions),
-                        ...data
-                    })
-                });
-
-                const resultado = await envio.json();
-
-                if (resultado.success && redirectUrl)
-                    window.location.href = redirectUrl;
-                else if (!resultado.success) {
-                    const erro = typeof json.data === 'string' ? json.data : 'Erro no envio.';
-                    alert('[AlphaForm] Falha no envio: ' + erro);
-                    esconderLoader();
-                    return
-                }
-
-                esconderLoader();
-
+                await handleSubmit(form)
             });
         });
-
-
     });
 }
 else

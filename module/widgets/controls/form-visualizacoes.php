@@ -42,6 +42,33 @@ function register_form_visualizacoes_controls(Widget_Base $widget)
         ]
     );
 
+    // Localização do usuário
+    $widget->add_control(
+        'enable_geolocation',
+        [
+            'label' => __('Ativar geolocalização', 'alpha-form-premium'),
+            'type' => \Elementor\Controls_Manager::SWITCHER,
+            'label_on' => __('Sim', 'alpha-form-premium'),
+            'label_off' => __('Não', 'alpha-form-premium'),
+            'return_value' => 'yes',
+            'default' => 'no',
+        ]
+    );
+
+    // Ocultar tela de envio
+    $widget->add_control(
+        'show_submit_screen',
+        [
+            'label' => __('Mostrar tela de envio', 'alpha-form-premium'),
+            'description' => __('Envia automaticamente após o último campo. Ideal para páginas de captura com alta conversão.'),
+            'type' => \Elementor\Controls_Manager::SWITCHER,
+            'label_on' => __('Sim', 'alpha-form-premium'),
+            'label_off' => __('Não', 'alpha-form-premium'),
+            'return_value' => 'yes',
+            'default' => 'no',
+        ]
+    );
+
     $widget->add_control(
         'text_auxiliar',
         [
