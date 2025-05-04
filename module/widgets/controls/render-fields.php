@@ -13,9 +13,20 @@ function render_alpha_form_fields($settings, $widget_id)
     $show_submit_screen = $settings['show_submit_screen'] === 'yes';
     $btn_width = $settings['button_width_percent'] ?? '';
     $style = 'width: ' . esc_attr($btn_width) . '%;';
+    $btn_text  = $settings['button_text'] ?? 'Enviar';
+    $btn_id    = $settings['button_id'] ?? '';
+    $btn_icon  = $settings['button_icon']['value'] ?? '';
+    $btnvalue  = $settings['btn_value'] ?? '';
+    $class = 'alpha-form-submit';
+    $show_required = $settings['show_required_mark'] === 'yes';
+    $enable_geolocation = $settings['enable_geolocation'] === 'yes' ? 'true' : 'false';
 
-
-    echo '<form class="alpha-form" data-widget-id="' . esc_attr($widget_id) . '" novalidate data-form-id="' . esc_attr($form_name) . '" data-redirect="' . esc_attr($datashortcode) .  '" data-auto-submit="' . esc_attr($show_submit_screen) . '">';
+    echo '<form class="alpha-form" 
+        data-widget-id="' . esc_attr($widget_id) . '" 
+        novalidate data-form-id="' . esc_attr($form_name) . '" 
+        data-redirect="' . esc_attr($datashortcode) .  '" 
+        data-auto-submit="' . esc_attr($show_submit_screen) . '"
+        data-enable-geolocation="' . esc_attr($enable_geolocation) . '" >';
 
     if (!empty($settings['form_fields'])) {
         foreach ($settings['form_fields'] as $i => $field) {
@@ -28,14 +39,11 @@ function render_alpha_form_fields($settings, $widget_id)
             $required    = ($field['required'] === 'yes') ? 'required' : '';
             $default     = $field['field_value'] ?? '';
             $pattern     = $field['field_pattern'] ?? '';
-            $show_required = $settings['show_required_mark'] === 'yes';
             $btn_text    = $field['next_button_text'] ?? '';
             $step_class  = 'alpha-form-step' . ($i === 0 ? ' active' : '');
             $special_masks = ['cpf', 'cnpj', 'cep', 'currency', 'credit_card'];
 
             $mask = in_array($type, $special_masks) ? ' data-mask="' . esc_attr($type) . '"' : '';
-
-
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
             echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
@@ -157,13 +165,6 @@ function render_alpha_form_fields($settings, $widget_id)
         }
     }
     echo '<div class="alpha-form-field alpha-form-final">';
-
-    // Botão final
-    $btn_text  = $settings['button_text'] ?? 'Enviar';
-    $btn_id    = $settings['button_id'] ?? '';
-    $btn_icon  = $settings['button_icon']['value'] ?? '';
-    $btnvalue  = $settings['btn_value'] ?? '';
-    $class = 'alpha-form-submit';
 
     echo $btnvalue ? '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>' : "";
     echo '<p class="alpha-form-description">' . esc_html($settings['btn_descricao']) . '</p>';

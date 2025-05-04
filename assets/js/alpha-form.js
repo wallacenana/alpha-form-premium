@@ -192,8 +192,8 @@ if (wrapper) {
             nonce: alphaFormVars.nonce,
             widgetId: widgetId,
             postId: postId,
-            latitude: latitude,
-            longitude: longitude,
+            latitude: latitude || "",
+            longitude: longitude || "",
             response: JSON.stringify({
                 [input.name]: value
             }),
@@ -541,10 +541,12 @@ if (wrapper) {
             // Se não existir ou expirou, gera nova sessão
             sessionId = generateSessionId();
             localStorage.setItem(sessionKey, sessionId);
-            localStorage.setItem(sessionExpireKey, now + 2 * 60 * 1000); // 2 minutos de vida
+            localStorage.setItem(sessionExpireKey, now + 2 * 60 * 1000);
         }
 
-        if (!localStorage.getItem(pageViewSavedKey)) {
+        const enableGeo = form?.dataset.enableGeolocation === 'true';
+
+        if (enableGeo && !localStorage.getItem(pageViewSavedKey)) {
             if (!navigator.geolocation) {
                 salvarPageView();
             } else {
