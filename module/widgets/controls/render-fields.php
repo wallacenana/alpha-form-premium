@@ -47,9 +47,52 @@ function render_alpha_form_fields($settings, $widget_id)
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
             echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
-            echo $label ? wp_kses_post('<h3 class="alpha-form-titulo">' . esc_html($label) . $requiredMark . '</h3>') : "";
+            $allowed_html = array(
+                'a' => array(
+                    'href' => true,
+                    'title' => true,
+                    'target' => true,
+                    'rel' => true,
+                ),
+                'br' => [],
+                'em' => [],
+                'strong' => [],
+                'b' => [],
+                'i' => [],
+                'u' => [],
+                'span' => array(
+                    'class' => true,
+                    'style' => true,
+                ),
+                'div' => array(
+                    'class' => true,
+                    'style' => true,
+                ),
+                'p' => array(
+                    'class' => true,
+                    'style' => true,
+                ),
+                'h1' => array('class' => true, 'style' => true),
+                'h2' => array('class' => true, 'style' => true),
+                'h3' => array('class' => true, 'style' => true),
+                'ul' => ['class' => true],
+                'ol' => ['class' => true],
+                'li' => ['class' => true],
+                'img' => array(
+                    'src' => true,
+                    'alt' => true,
+                    'width' => true,
+                    'height' => true,
+                    'class' => true,
+                    'style' => true,
+                ),
+            );
+
+            if ($label) {
+                echo wp_kses('<h3 class="alpha-form-titulo">' . $label . $requiredMark . '</h3>', $allowed_html);
+            }
             if (!empty($field['field_descricao'])) {
-                echo '<div class="alpha-form-description">' . wp_kses_post($field['field_descricao']) . '</div>';
+                echo '<div class="alpha-form-description">' . wp_kses($field['field_descricao'], $allowed_html) . '</div>';
             }
 
             switch ($type) {
@@ -167,7 +210,31 @@ function render_alpha_form_fields($settings, $widget_id)
     echo '<div class="alpha-form-field alpha-form-final">';
 
     echo $btnvalue ? '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>' : "";
-    echo '<p class="alpha-form-description">' . esc_html($settings['btn_descricao']) . '</p>';
+    if (!empty($settings['btn_descricao'])) {
+        echo '<div class="alpha-form-description">' . wp_kses($settings['btn_descricao'], array(
+            'a' => [
+                'href' => [],
+                'title' => [],
+                'target' => [],
+                'rel' => []
+            ],
+            'br' => [],
+            'em' => [],
+            'strong' => [],
+            'span' => [
+                'class' => [],
+                'style' => []
+            ],
+            'div' => [
+                'class' => [],
+                'style' => []
+            ],
+            'p' => [
+                'class' => [],
+                'style' => []
+            ]
+        )) . '</div>';
+    }
 
     if ($show_submit_screen) {
         echo '<button type="submit" id="' . esc_attr($btn_id) . '" class="' . esc_attr($class) . '" style="' . esc_attr($style) . '">';
