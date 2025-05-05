@@ -42,7 +42,7 @@ function register_form_botao_controls(Widget_Base $widget)
         'btn_descricao',
         [
             'label' => __('Descrição', 'alpha-form-premium-main'),
-            'type' => Controls_Manager::TEXTAREA,
+            'type' => Controls_Manager::WYSIWYG,
             'default' => 'Parabéns pelo seu cadastro',
         ]
     );
