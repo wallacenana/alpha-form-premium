@@ -46,7 +46,6 @@ function render_alpha_form_fields($settings, $widget_id)
             $mask = in_array($type, $special_masks) ? ' data-mask="' . esc_attr($type) . '"' : '';
             $requiredMark = $show_required && esc_html($required) ? '<span style="color:red">*</span>' : '';
 
-            echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
             $allowed_html = array(
                 'a' => array(
                     'href' => true,
@@ -87,6 +86,8 @@ function render_alpha_form_fields($settings, $widget_id)
                     'style' => true,
                 ),
             );
+
+            echo '<div class="alpha-form-field ' . esc_attr($step_class) . '">';
 
             if ($label) {
                 echo wp_kses('<h3 class="alpha-form-titulo">' . $label . $requiredMark . '</h3>', $allowed_html);
@@ -209,31 +210,11 @@ function render_alpha_form_fields($settings, $widget_id)
     }
     echo '<div class="alpha-form-field alpha-form-final">';
 
-    echo $btnvalue ? '<h3 class="alpha-form-titulo">' . esc_html($btnvalue) . '</h3>' : "";
+    if ($btnvalue) {
+        echo wp_kses('<h3 class="alpha-form-titulo">' . $btnvalue . '</h3>', $allowed_html);
+    }
     if (!empty($settings['btn_descricao'])) {
-        echo '<div class="alpha-form-description">' . wp_kses($settings['btn_descricao'], array(
-            'a' => [
-                'href' => [],
-                'title' => [],
-                'target' => [],
-                'rel' => []
-            ],
-            'br' => [],
-            'em' => [],
-            'strong' => [],
-            'span' => [
-                'class' => [],
-                'style' => []
-            ],
-            'div' => [
-                'class' => [],
-                'style' => []
-            ],
-            'p' => [
-                'class' => [],
-                'style' => []
-            ]
-        )) . '</div>';
+        echo '<div class="alpha-form-description">' . wp_kses($settings['btn_descricao'], $allowed_html) . '</div>';
     }
 
     if ($show_submit_screen) {
@@ -293,6 +274,47 @@ function render_alpha_form_fields($settings, $widget_id)
     // phpcs:enable PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
 
     if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-        echo '<style>.alpha-form-field { opacity: 1 !important; visibility: visible !important; margin-bottom: 20px!important; position: relative !important; transform: none !important; height: auto!important; margin-bottom: 50px !important }</style>';
+        echo '<script>
+            (function () {
+                const styleId = "alpha-form-preview-style";
+    
+                function togglePreviewStyle() {
+                    const bodyClassList = document.body.classList;
+                    const alreadyInjected = document.getElementById(styleId);
+    
+                    if (bodyClassList.contains("elementor-editor-preview")) {
+                        
+                        if (alreadyInjected) {
+                            alreadyInjected.remove();
+                            console.log("[AlphaForm] Estilo de preview removido.");
+                        }
+                    } else {
+                     if (!alreadyInjected) {
+                            const style = document.createElement("style");
+                            style.id = styleId;
+                            style.innerHTML = `
+                                .alpha-form-field {
+                                    opacity: 1 !important;
+                                    visibility: visible !important;
+                                    margin-bottom: 50px !important;
+                                    position: relative !important;
+                                    transform: none !important;
+                                    height: auto !important;
+                                }
+                            `;
+                            document.head.appendChild(style);
+                            console.log("[AlphaForm] Estilo de preview aplicado.");
+                        }
+                    }
+                }
+    
+                // Executa imediatamente
+                togglePreviewStyle();
+    
+                // Observa mudanças na body class
+                new MutationObserver(togglePreviewStyle)
+                    .observe(document.body, { attributes: true, attributeFilter: ["class"] });
+            })();
+        </script>';
     }
 }
