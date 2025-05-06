@@ -28,7 +28,7 @@ function register_style_botao_controls(Widget_Base $widget)
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
             ],
-            'selector' => '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button',
         ]
     );
 
@@ -52,7 +52,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_SECONDARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -66,7 +66,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_ACCENT,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -87,7 +87,7 @@ function register_style_botao_controls(Widget_Base $widget)
             'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-next-button:hover' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button:hover' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -98,7 +98,7 @@ function register_style_botao_controls(Widget_Base $widget)
             'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-next-button:hover' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button:hover' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -121,7 +121,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'dotted' => 'Pontilhada',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button' => 'border-style: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button' => 'border-style: {{VALUE}};',
             ],
         ]
     );
@@ -131,7 +131,7 @@ function register_style_botao_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'button_border',
-            'selector' => '{{WRAPPER}} .alpha-form-wrapper label',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-wrapper label',
         ]
     );
     $widget->add_responsive_control(
@@ -147,7 +147,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -166,7 +166,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-next-button, {{WRAPPER}} .alpha-form-submit' =>
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit' =>
                 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
@@ -187,7 +187,7 @@ function register_style_botao_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-next-button, {{WRAPPER}} .alpha-form-submit' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -213,7 +213,7 @@ function register_style_botao_controls(Widget_Base $widget)
             ],
             'default' => 'left',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit, {{WRAPPER}} .alpha-form-next-button' => '{{VALUE}}!important',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-next-button' => '{{VALUE}}!important',
             ],
         ]
     );

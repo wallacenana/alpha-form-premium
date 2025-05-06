@@ -24,7 +24,7 @@ function register_style_input_controls(Widget_Base $widget)
         Group_Control_Typography::get_type(),
         [
             'name' => 'input_typography',
-            'selector' => '{{WRAPPER}} .alpha-form-input',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input',
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
             ],
@@ -37,7 +37,7 @@ function register_style_input_controls(Widget_Base $widget)
             'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -48,7 +48,7 @@ function register_style_input_controls(Widget_Base $widget)
             'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -57,7 +57,7 @@ function register_style_input_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'input_border',
-            'selector' => '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select):not(.select):not(.select):not([type="checkbox"]):not(.acceptance)',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.radio):not(.checkbox):not(select):not(.select):not(.select):not([type="checkbox"]):not(.acceptance)',
         ]
     );
 
@@ -75,7 +75,7 @@ function register_style_input_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.alpha-form-input.select):not(.alpha-form-input.radio):not(.alpha-form-input.checkbox)' =>
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.alpha-form-input.select):not(.alpha-form-input.radio):not(.alpha-form-input.checkbox)' =>
                 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
@@ -88,7 +88,7 @@ function register_style_input_controls(Widget_Base $widget)
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.radio):not(.checkbox):not(select)' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -113,7 +113,7 @@ function register_style_input_controls(Widget_Base $widget)
             ],
             'default' => 'left',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input:not(.radio):not(.checkbox)' => 'text-align: {{VALUE}}!important',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input:not(.radio):not(.checkbox)' => 'text-align: {{VALUE}}!important',
             ],
         ]
     );

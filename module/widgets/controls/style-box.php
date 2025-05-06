@@ -24,7 +24,7 @@ function register_style_box_controls(Widget_Base $widget)
             'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '.alpha-form-wrapper' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}}' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -33,7 +33,7 @@ function register_style_box_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'box_border',
-            'selector' => '.alpha-form-wrapper',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}}',
         ]
     );
 
@@ -51,7 +51,7 @@ function register_style_box_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '.alpha-form-wrapper' =>
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}}' =>
                 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
@@ -64,7 +64,7 @@ function register_style_box_controls(Widget_Base $widget)
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
-                '.alpha-form-wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}}' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -85,7 +85,7 @@ function register_style_box_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-field' => 'gap: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-field' => 'gap: {{SIZE}}{{UNIT}};',
             ],
         ]
     );

@@ -37,7 +37,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             ],
             'default' => 'column',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-input.checkbox' => 'flex-direction: {{VALUE}}',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox' => 'flex-direction: {{VALUE}}',
             ],
         ]
     );
@@ -45,7 +45,7 @@ function register_form_style_label_controls(Widget_Base $widget)
         Group_Control_Typography::get_type(),
         [
             'name' => 'label_typography',
-            'selector' => '{{WRAPPER}} .alpha-form-wrapper label',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} label',
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
             ],
@@ -72,7 +72,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_SECONDARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select' => 'color: {{VALUE}};'
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select' => 'color: {{VALUE}};'
             ],
         ]
     );
@@ -86,7 +86,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_ACCENT,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio label, {{WRAPPER}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-input.select select' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -119,9 +119,9 @@ function register_form_style_label_controls(Widget_Base $widget)
                 ],
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.checkbox, {{WRAPPER}} .alpha-form-input.checkbox label,
-                {{WRAPPER}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-input.radio label, 
-                {{WRAPPER}} .alpha-form-input.select select' => 'width: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox label,
+                {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio label, 
+                {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select' => 'width: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -143,7 +143,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'label' => __('Cor do Texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper label:not(.acceptance):hover' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} label:not(.acceptance):hover' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -154,7 +154,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio label:hover, {{WRAPPER}} .alpha-form-input.checkbox label:hover' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio label:hover, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox label:hover' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -168,7 +168,7 @@ function register_form_style_label_controls(Widget_Base $widget)
         Group_Control_Border::get_type(),
         [
             'name' => 'label_border',
-            'selector' => '{{WRAPPER}} .alpha-form-input.radio label, {{WRAPPER}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-input option',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input option',
         ]
     );
 
@@ -179,7 +179,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'label' => __('Borda Arredondada', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper label, {{WRAPPER}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-input option' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input option' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -194,7 +194,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             ],
             'default' => ['size' => 10, 'unit' => 'px'],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-input.checkbox' => 'gap: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox' => 'gap: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -213,7 +213,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'unit' => 'px',
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio label,{{WRAPPER}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-input option' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio label,{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox label, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.select select, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input option' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -236,7 +236,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'label' => __('Cor da Borda', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-color: {{VALUE}};',
             ],
         ]
     );
@@ -246,7 +246,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'label' => __('Cor do texto', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -259,7 +259,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'type' => Controls_Manager::COLOR,
             'default' => 'transparent',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -277,7 +277,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 ],
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -296,7 +296,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 ],
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-radius: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'border-radius: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -330,7 +330,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'size' => -10,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'left: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.radio[data-style="abc"] label::before, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-input.checkbox[data-style="abc"] label::before' => 'left: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -356,7 +356,7 @@ function register_form_style_label_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_TEXT,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-text-auxiliar' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-text-auxiliar' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -369,7 +369,7 @@ function register_form_style_label_controls(Widget_Base $widget)
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_TEXT,
             ],
-            'selector' => '{{WRAPPER}} .alpha-text-auxiliar',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-text-auxiliar',
         ]
     );
 

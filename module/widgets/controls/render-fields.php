@@ -7,7 +7,8 @@ if (!defined('ABSPATH')) exit;
 
 function render_alpha_form_fields($settings, $widget_id)
 {
-    echo '<div class="alpha-form-wrapper">';
+    echo '<div class="alpha-form-wrapper-' . esc_attr($widget_id) . '">';
+
     $form_name = $settings['form_name'] ?? 'formulario-alpha';
     $datashortcode = $settings['redirect_url']['url'] ?? '';
     $show_submit_screen = $settings['show_submit_screen'] === 'yes';

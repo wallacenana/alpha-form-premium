@@ -3,7 +3,6 @@
 namespace AlphaFormPremium\Module\Controls;
 
 use Elementor\Controls_Manager;
-use Elementor\Repeater;
 use Elementor\Widget_Base;
 
 if (!defined('ABSPATH')) exit;

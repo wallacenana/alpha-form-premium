@@ -24,7 +24,7 @@ function register_style_descricao_controls(Widget_Base $widget)
         Group_Control_Typography::get_type(),
         [
             'name' => 'description_typography',
-            'selector' => '{{WRAPPER}} .alpha-form-description',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-description',
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_TEXT,
             ],
@@ -40,7 +40,7 @@ function register_style_descricao_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_SECONDARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-description' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-description' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -66,7 +66,7 @@ function register_style_descricao_controls(Widget_Base $widget)
             ],
             'default' => 'left',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-description' => 'text-align: {{VALUE}}!important',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-description' => 'text-align: {{VALUE}}!important',
             ],
         ]
     );

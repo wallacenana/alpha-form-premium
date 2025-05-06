@@ -24,7 +24,7 @@ function register_form_style_titulo_controls(Widget_Base $widget)
         Group_Control_Typography::get_type(),
         [
             'name' => 'titulo_typography',
-            'selector' => '{{WRAPPER}} .alpha-form-titulo',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-titulo',
             'global' => [
                 'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
             ],
@@ -40,7 +40,7 @@ function register_form_style_titulo_controls(Widget_Base $widget)
                 'default' => Global_Colors::COLOR_PRIMARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper h3' => 'color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} h3' => 'color: {{VALUE}};',
             ],
         ]
     );
@@ -67,7 +67,7 @@ function register_form_style_titulo_controls(Widget_Base $widget)
             ],
             'default' => 'left',
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-wrapper h3' => 'text-align: {{VALUE}}!important',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} h3' => 'text-align: {{VALUE}}!important',
             ],
         ]
     );

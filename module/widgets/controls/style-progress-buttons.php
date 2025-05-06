@@ -27,7 +27,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             ],
             'default' => ['size' => 10, 'unit' => 'px'],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-progress-button i, {{WRAPPER}} .alpha-form-progress-button svg' => 'width: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button i, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button svg' => 'width: {{SIZE}}{{UNIT}};',
             ],
         ]
     );
@@ -52,7 +52,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
                 'default' => Global_Colors::COLOR_SECONDARY,
             ],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-progress-button i, {{WRAPPER}} .alpha-form-progress-button svg' => 'fill: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button i, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button svg' => 'fill: {{VALUE}};',
             ],
         ]
     );
@@ -66,7 +66,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
                 'default' => Global_Colors::COLOR_ACCENT,
             ],
             'selectors' => [
-                ' {{WRAPPER}} .alpha-form-progress-button' => 'background-color: {{VALUE}};',
+                ' {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -87,7 +87,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'label' => __('Cor do icone', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-progress-button:hover i, {{WRAPPER}} .alpha-form-progress-button:hover svg' => 'fill: {{VALUE}}!important;',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button:hover i, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button:hover svg' => 'fill: {{VALUE}}!important;',
             ],
         ]
     );
@@ -98,7 +98,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'label' => __('Cor de Fundo', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-progress-button:hover' => 'background-color: {{VALUE}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-submit:hover, {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button:hover' => 'background-color: {{VALUE}};',
             ],
         ]
     );
@@ -111,7 +111,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
         Group_Control_Border::get_type(),
         [
             'name' => 'progress_button_border',
-            'selector' => '{{WRAPPER}} .alpha-form-progress-button',
+            'selector' => '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button',
             'fields_options' => [
                 'border' => [
                     'default' => 'none',
@@ -127,7 +127,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%'],
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-progress-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -138,7 +138,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'label' => __('Cor da Borda', 'alpha-form-premium-main'),
             'type' => Controls_Manager::COLOR,
             'selectors' => [
-            '{{WRAPPER}} .alpha-form-progress-button' => 'border-color: {{VALUE}};',
+            '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button' => 'border-color: {{VALUE}};',
             ],
         ]
     );
@@ -150,7 +150,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'label' => __('Padding', 'alpha-form-premium-main'),
             'type' => Controls_Manager::DIMENSIONS,
             'selectors' => [
-                '{{WRAPPER}} .alpha-form-progress-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
@@ -162,7 +162,7 @@ function register_style_progress_buttons_controls(Widget_Base $widget) {
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em'],
             'selectors' => [
-                ' {{WRAPPER}} .alpha-form-progress-button' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ' {{WRAPPER}} .alpha-form-wrapper-{{ID}} .alpha-form-progress-button' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]
     );
